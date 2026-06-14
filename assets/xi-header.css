@@ -84,6 +84,7 @@ xi-header-component {
 .xi-header__zone--right {
   justify-content: flex-end;
   gap: var(--xi-space-xs);
+  overflow: visible;
 }
 
 /* Pull the last right-side action flush so its glyph edge lines up with the
@@ -173,35 +174,51 @@ xi-header-component {
 .xi-header__cart-trigger,
 .xi-header__cart-link {
   position: relative;
+  overflow: visible;
 }
 
 .xi-header__cart-icon {
+  --xi-cart-bubble-size: 1.125rem;
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  overflow: visible;
 }
 
 .xi-header__cart-icon .cart-bubble {
   position: absolute;
-  top: 0.125rem;
+  top: 0;
   right: 0;
-  transform: translate(35%, -35%);
-  --color-background: currentColor;
-  --color-foreground: var(--xi-color-white);
+  z-index: 1;
+  width: var(--xi-cart-bubble-size);
+  min-width: var(--xi-cart-bubble-size);
+  height: var(--xi-cart-bubble-size);
+  transform: translate(42%, -42%);
+  pointer-events: none;
 }
 
 .xi-header__cart-icon .cart-bubble__background {
-  background-color: currentColor;
+  background-color: var(--xi-color-black);
+  border-radius: 50%;
 }
 
 .xi-header__cart-icon .cart-bubble__text,
 .xi-header__cart-icon .cart-bubble__text-count {
   color: var(--xi-color-white);
+  font-family: var(--xi-font-sans);
+  font-size: 0.625rem;
+  font-weight: 600;
+  line-height: 1;
 }
 
-.xi-header--transparent-mode.xi-header--transparent .xi-header__cart-icon .cart-bubble {
-  --color-foreground: var(--xi-color-black);
+.xi-header--transparent-mode.xi-header--transparent .xi-header__cart-icon .cart-bubble__background {
+  background-color: var(--xi-color-white);
+}
+
+.xi-header--transparent-mode.xi-header--transparent .xi-header__cart-icon .cart-bubble__text,
+.xi-header--transparent-mode.xi-header--transparent .xi-header__cart-icon .cart-bubble__text-count {
+  color: var(--xi-color-black);
 }
 
 .xi-header__account shopify-account {

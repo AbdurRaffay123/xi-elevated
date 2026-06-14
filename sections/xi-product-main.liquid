@@ -32,19 +32,23 @@
       </div>
 
       <div class="xi-product__buybox">
-        {% render 'xi-breadcrumbs', product: product, class: 'xi-product__breadcrumbs' %}
+        <div class="xi-product__buybox-heading">
+          {% render 'xi-breadcrumbs', product: product, class: 'xi-product__breadcrumbs' %}
 
-        <h1 class="xi-product__title xi-type-product-title">{{ product.title | escape }}</h1>
-
-        {%- if xi_drop_label != blank -%}
-          <p class="xi-product__drop-label xi-type-eyebrow">{{ xi_drop_label | escape }}</p>
-        {%- endif -%}
-
-        <div class="xi-product__price" id="price-{{ section.id }}">
-          {% render 'price', product_resource: product, show_sale_price_first: true %}
+          <h1 class="xi-product__title xi-type-product-title">{{ product.title | escape }}</h1>
         </div>
 
-        {% render 'xi-product-variant-picker', product: product, section: section %}
+        <div class="xi-product__buybox-details">
+          {%- if xi_drop_label != blank -%}
+            <p class="xi-product__drop-label xi-type-eyebrow">{{ xi_drop_label | escape }}</p>
+          {%- endif -%}
+
+          <div class="xi-product__price" id="price-{{ section.id }}">
+            {% render 'price', product_resource: product, show_sale_price_first: true %}
+          </div>
+
+          {% render 'xi-product-variant-picker', product: product, section: section %}
+        </div>
 
         {%- if section.settings.show_size_guide -%}
           <a class="xi-product__size-guide" href="{{ xi_size_guide_url }}">

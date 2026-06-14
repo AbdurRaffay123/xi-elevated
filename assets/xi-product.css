@@ -9,6 +9,8 @@
   --xi-pdp-buybox-offset: clamp(0.5rem, 1.25vw, 1rem);
   --xi-pdp-right-col-width: calc(100% - var(--xi-pdp-buybox-offset));
   --xi-pdp-media-width-extra: 10px;
+  --xi-pdp-breadcrumb-gap: 20px;
+  --xi-pdp-price-gap: 12px;
 }
 
 .xi-product {
@@ -28,10 +30,22 @@
 
 .xi-product__breadcrumbs {
   padding-block: 0;
-  margin: 0 0 var(--xi-space-sm);
+  margin: 0;
 }
 
-.xi-product__buybox > .xi-product__breadcrumbs:first-child {
+.xi-product__buybox-heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--xi-pdp-breadcrumb-gap);
+}
+
+.xi-product__buybox-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--xi-pdp-price-gap);
+}
+
+.xi-product__buybox > .xi-product__buybox-heading:first-child .xi-product__breadcrumbs:first-child {
   margin-top: 0;
 }
 
@@ -233,12 +247,13 @@
 }
 
 .xi-product__drop-label {
-  margin: calc(var(--xi-space-xs) * -1) 0 0;
+  margin: -8px 0 0;
   color: var(--xi-color-text-muted);
   text-transform: uppercase;
 }
 
 .xi-product__price {
+  margin: 0;
   font-size: var(--xi-text-price-size);
   letter-spacing: var(--xi-text-price-ls);
   font-weight: 700;
@@ -394,21 +409,27 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
   width: 100%;
   min-height: 2.75rem;
   padding-inline: 0.5rem;
-  border: 0;
+  border: 1px solid var(--xi-color-black);
   background-color: transparent;
   font-size: var(--xi-text-eyebrow-size);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  transition: background-color var(--xi-transition-fast), color var(--xi-transition-fast);
+  transition: background-color var(--xi-transition-fast), color var(--xi-transition-fast), border-color var(--xi-transition-fast);
+}
+
+.xi-product__variant-picker .variant-option--buttons:not(.variant-option--swatches) .variant-option__button-label:hover .variant-option__button-label__text {
+  border-color: var(--xi-color-black);
 }
 
 .xi-product__variant-picker .variant-option__button-label input:checked + .variant-option__button-label__text,
 .xi-product__variant-picker .variant-option__button-label:has(input:checked) .variant-option__button-label__text {
   background-color: var(--xi-color-black);
   color: var(--xi-color-white);
+  border-color: var(--xi-color-black);
 }
 
 .xi-product__variant-picker .variant-option__button-label input {
