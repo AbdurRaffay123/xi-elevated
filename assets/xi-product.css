@@ -253,6 +253,7 @@
 }
 
 .xi-product__price {
+  display: block;
   margin: 0;
   font-size: var(--xi-text-price-size);
   letter-spacing: var(--xi-text-price-ls);

@@ -43,9 +43,14 @@
             <p class="xi-product__drop-label xi-type-eyebrow">{{ xi_drop_label | escape }}</p>
           {%- endif -%}
 
-          <div class="xi-product__price" id="price-{{ section.id }}">
+          <product-price
+            class="xi-product__price"
+            id="price-{{ section.id }}"
+            data-block-id="xi-product-price-{{ section.id }}"
+            data-product-id="{{ product.id }}"
+          >
             {% render 'price', product_resource: product, show_sale_price_first: true %}
-          </div>
+          </product-price>
 
           {% render 'xi-product-variant-picker', product: product, section: section %}
         </div>
