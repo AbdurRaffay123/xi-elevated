@@ -1,0 +1,86 @@
+{%- doc -%}
+  Renders the XI Elevated stacked wordmark or an uploaded logo image.
+
+  @param {string} [variant] - Display context: 'header' (default) or 'footer'
+  @param {string} [color_mode] - 'light' (black on white) or 'dark' (white on black). Default: 'light'
+  @param {image} [logo_image] - Optional logo image. Falls back to settings.logo, then typography
+  @param {string} [text_fallback] - Mark text when no image. Default: shop name split as XI / ELEVATED
+  @param {number} [width] - Logo image max width in px. Default: 120 header, 140 footer
+  @param {boolean} [link] - Wrap in home link. Default: true
+  @param {string} [class] - Additional CSS classes
+{%- enddoc -%}
+
+{% liquid
+  assign xi_logo_variant = variant | default: 'header'
+  assign xi_logo_color_mode = color_mode | default: 'light'
+  assign xi_logo_link = link | default: true, allow_false: true
+  assign xi_logo_image = logo_image | default: settings.logo
+
+  if width != blank
+    assign xi_logo_width = width
+  elsif xi_logo_variant == 'footer'
+    assign xi_logo_width = 140
+  else
+    assign xi_logo_width = 120
+  endif
+
+  assign xi_logo_mark = 'XI'
+  assign xi_logo_name = 'ELEVATED'
+
+  if text_fallback != blank
+    assign fallback_parts = text_fallback | split: ' '
+    if fallback_parts.size >= 2
+      assign xi_logo_mark = fallback_parts[0]
+      assign xi_logo_name = fallback_parts | slice: 1, fallback_parts.size | join: ' '
+    else
+      assign xi_logo_name = text_fallback
+    endif
+  elsif settings.logo != blank and logo_image == blank
+    assign xi_logo_name = shop.name
+  endif
+
+  assign xi_logo_classes = 'xi-logo'
+  if xi_logo_variant == 'footer'
+    assign xi_logo_classes = xi_logo_classes | append: ' xi-logo--footer'
+  endif
+  if xi_logo_color_mode == 'dark'
+    assign xi_logo_classes = xi_logo_classes | append: ' xi-logo--inverse'
+  endif
+  if class != blank
+    assign xi_logo_classes = xi_logo_classes | append: ' ' | append: class
+  endif
+
+  assign xi_logo_loading = 'eager'
+  if xi_logo_variant == 'footer'
+    assign xi_logo_loading = 'lazy'
+  endif
+%}
+
+{% if xi_logo_link %}
+  <a href="{{ routes.root_url }}" class="{{ xi_logo_classes }}" aria-label="{{ shop.name }}">
+{% else %}
+  <div class="{{ xi_logo_classes }}">
+{% endif %}
+
+  {% if xi_logo_image != blank %}
+    {% capture xi_logo_sizes %}(max-width: 749px) 100px, {{ xi_logo_width }}px{% endcapture %}
+    {{
+      xi_logo_image
+      | image_url: width: xi_logo_width
+      | image_tag:
+        widths: '80, 120, 160, 200',
+        sizes: xi_logo_sizes,
+        loading: xi_logo_loading,
+        alt: shop.name,
+        class: 'xi-logo__image'
+    }}
+  {% else %}
+    <span class="xi-logo__mark" aria-hidden="true">{{ xi_logo_mark }}</span>
+    <span class="xi-logo__name">{{ xi_logo_name }}</span>
+  {% endif %}
+
+{% if xi_logo_link %}
+  </a>
+{% else %}
+  </div>
+{% endif %}

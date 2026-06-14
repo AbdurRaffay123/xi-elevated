@@ -1,0 +1,44 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "xi_product_main": {
+      "type": "xi-product-main",
+      "settings": {
+        "drop_label": "Drop 001 — Off Grid Club",
+        "show_size_guide": true,
+        "size_guide_label": "Size guide",
+        "show_mini_trust": true,
+        "mini_trust_shipping_title": "Free shipping",
+        "mini_trust_shipping_sub": "On orders over $150",
+        "mini_trust_secure_title": "Secure checkout",
+        "mini_trust_secure_sub": "Safe & encrypted",
+        "padding_top": 16,
+        "padding_bottom": 64
+      }
+    },
+    "xi_product_details": {
+      "type": "xi-product-details",
+      "settings": {
+        "description_heading": "Description",
+        "features_heading": "Features",
+        "shipping_heading": "Shipping & returns",
+        "size_guide_heading": "Size guide",
+        "show_placeholder_image": false,
+        "padding_top": 40,
+        "padding_bottom": 56
+      }
+    }
+  },
+  "order": [
+    "xi_product_main",
+    "xi_product_details"
+  ]
+}

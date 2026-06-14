@@ -1,0 +1,519 @@
+/**
+ * XI Elevated — Footer system
+ * Premium black footer, 5-column desktop, intentional mobile stack
+ */
+
+/* ==========================================================================
+   FOOTER SHELL
+   ========================================================================== */
+
+.xi-footer {
+  background-color: var(--xi-footer-bg, var(--xi-color-black));
+  color: var(--xi-footer-text, var(--xi-color-text-inverse));
+  padding-top: var(--xi-footer-padding-top, var(--xi-space-xl));
+  padding-bottom: 10px;
+}
+
+.xi-footer-section-wrapper {
+  width: 100%;
+}
+
+/* ==========================================================================
+   MAIN GRID — 5 columns desktop
+   ========================================================================== */
+
+.xi-footer__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--xi-space-lg);
+  padding-bottom: 0;
+}
+
+.xi-footer__brand {
+  order: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--xi-space-sm);
+}
+
+.xi-footer__newsletter {
+  order: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0;
+}
+
+.xi-footer__column {
+  order: 3;
+}
+
+.xi-footer__column--shop  { order: 3; }
+.xi-footer__column--info  { order: 4; }
+.xi-footer__column--support { order: 5; }
+
+/* Small tablet / large phone: brand full, links in 2 cols, newsletter full */
+@media screen and (min-width: 540px) and (max-width: 749px) {
+  .xi-footer__main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: var(--xi-space-lg);
+    row-gap: var(--xi-space-xl);
+    align-items: start;
+  }
+
+  .xi-footer__brand      { grid-column: 1 / -1; order: unset; }
+  .xi-footer__column--shop    { grid-column: 1; order: unset; }
+  .xi-footer__column--info    { grid-column: 2; order: unset; }
+  .xi-footer__column--support { grid-column: 1; order: unset; }
+  .xi-footer__newsletter { grid-column: 1 / -1; order: unset; }
+}
+
+/* Tablet: brand full top, SHOP | INFO | SUPPORT in one row, newsletter full */
+@media screen and (min-width: 750px) and (max-width: 989px) {
+  .xi-footer__main {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: var(--xi-space-lg);
+    row-gap: var(--xi-space-xl);
+    align-items: start;
+  }
+
+  .xi-footer__brand      { grid-column: 1 / -1; order: unset; }
+  .xi-footer__column--shop    { grid-column: 1; order: unset; }
+  .xi-footer__column--info    { grid-column: 2; order: unset; }
+  .xi-footer__column--support { grid-column: 3; order: unset; }
+  .xi-footer__newsletter { grid-column: 1 / -1; order: unset; }
+}
+
+@media screen and (min-width: 990px) {
+  .xi-footer__main {
+    display: grid;
+    /* brand | shop | info | support | newsletter — give newsletter more room */
+    grid-template-columns: 1.1fr 0.75fr 0.75fr 0.75fr 1.65fr;
+    gap: var(--xi-space-lg) var(--xi-space-md);
+    align-items: start;
+  }
+
+  .xi-footer__brand,
+  .xi-footer__newsletter,
+  .xi-footer__column {
+    order: unset;
+  }
+}
+
+/* ==========================================================================
+   BRAND COLUMN — logo + mission
+   ========================================================================== */
+
+/* Center-align the stacked XI / ELEVATED wordmark */
+.xi-footer__logo {
+  align-items: center;
+}
+
+/* XI mark — +50% from base 2.25rem */
+.xi-footer__logo .xi-logo__mark {
+  font-size: 3.375rem;
+  line-height: 1;
+}
+
+/* ELEVATED — +20% from base 0.625rem */
+.xi-footer__logo .xi-logo__name {
+  font-size: 0.75rem;
+  letter-spacing: 0.32em;
+  margin-top: 0.5rem;
+}
+
+.xi-footer__logo .xi-logo__image {
+  filter: brightness(0) invert(1);
+}
+
+.xi-footer__mission {
+  max-width: 14rem;
+  font-size: 0.8125rem;
+  line-height: 1.65;
+  color: var(--xi-footer-muted, var(--xi-color-text-inverse-muted));
+}
+
+.xi-footer__mission p {
+  margin: 0;
+}
+
+.xi-footer__mission p + p {
+  margin-top: 0.125rem;
+}
+
+/* ==========================================================================
+   MENU COLUMNS
+   ========================================================================== */
+
+.xi-footer__heading {
+  margin: 0 0 0.625rem;
+  font-size: calc(var(--xi-text-footer-heading-size) * 1.25);
+  font-weight: 700;
+  letter-spacing: var(--xi-text-footer-heading-ls);
+  text-transform: uppercase;
+  color: var(--xi-footer-text, var(--xi-color-text-inverse));
+}
+
+.xi-footer__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.xi-footer__link {
+  font-size: var(--xi-text-footer-link-size);
+  line-height: var(--xi-text-footer-link-lh);
+  text-decoration: none;
+  color: var(--xi-footer-muted, var(--xi-color-text-inverse-muted));
+  transition: color var(--xi-transition-fast);
+}
+
+.xi-footer__link:hover {
+  color: var(--xi-footer-text, var(--xi-color-text-inverse));
+}
+
+.xi-footer__link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--xi-footer-bg), 0 0 0 4px var(--xi-footer-text);
+}
+
+/* ==========================================================================
+   NEWSLETTER COLUMN
+   ========================================================================== */
+
+.xi-footer__newsletter-form .xi-newsletter__heading {
+  font-size: calc(var(--xi-text-footer-heading-size) * 1.25);
+  color: var(--xi-footer-text, var(--xi-color-text-inverse));
+  margin-bottom: 0.5rem;
+}
+
+.xi-footer__newsletter-form .xi-newsletter__description {
+  margin: 0 0 var(--xi-space-sm);
+  font-size: 0.85rem;
+  width: 60%;
+  line-height: 1.55;
+  color: var(--xi-footer-muted, var(--xi-color-text-inverse-muted));
+}
+
+.xi-footer__newsletter-form {
+  gap: 0.375rem;
+  width: 100%;
+  align-items: flex-start;
+}
+
+.xi-footer__newsletter-form .xi-newsletter__form {
+  width: 55%;
+  max-width: 16rem;
+  margin-top: var(--xi-space-xs);
+  gap: 0;
+}
+
+/* Framed input — transparent inside, single white border */
+.xi-footer__newsletter-form .xi-newsletter__field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 120%;
+  min-height: 3.7rem;
+  padding: 0 0.375rem 0 0.625rem;
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  border-radius: 2px !important;
+  outline: none !important;
+  box-shadow: none !important;
+  transition: border-color var(--xi-transition-fast);
+}
+
+.xi-footer__newsletter-form .xi-newsletter__field:focus-within {
+  border-color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Input — transparent interior, +20% height vs prior 2.25rem */
+.xi-footer__newsletter-form .xi-newsletter__input {
+  flex: 1 !important;
+  min-width: 0 !important;
+  height: 2.7rem !important;
+  padding: 0 2.25rem 0 0 !important;
+  font-size: 0.75rem !important;
+  letter-spacing: 0.01em;
+  color: var(--xi-footer-text, var(--xi-color-text-inverse)) !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.xi-footer__newsletter-form .xi-newsletter__input::placeholder {
+  color: rgba(255, 255, 255, 0.38) !important;
+}
+
+.xi-footer__newsletter-form .xi-newsletter__input:focus,
+.xi-footer__newsletter-form .xi-newsletter__input:focus-visible {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Arrow submit — sits at far right of the underline, NO border */
+.xi-footer__newsletter-form .xi-newsletter__submit {
+  position: absolute !important;
+  right: 0 !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 1.75rem !important;
+  height: 1.75rem !important;
+  padding: 0 !important;
+  color: var(--xi-footer-text, var(--xi-color-text-inverse)) !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  /* kill base submit border */
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  cursor: pointer;
+  transition: opacity var(--xi-transition-fast);
+}
+
+.xi-footer__newsletter-form .xi-newsletter__submit:hover {
+  background: transparent !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+  opacity: 0.6;
+}
+
+.xi-footer__newsletter-form .xi-newsletter__submit:focus-visible {
+  outline: none !important;
+  border: none !important;
+  box-shadow: 0 0 0 2px var(--xi-footer-bg), 0 0 0 4px var(--xi-footer-text) !important;
+}
+
+/* ==========================================================================
+   SOCIAL ICONS — bar right side, same row as copyright
+   ========================================================================== */
+
+ul.xi-footer__social {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 0.75rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+  list-style-type: none !important;
+}
+
+ul.xi-footer__social > li {
+  display: inline-flex !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+  list-style-type: none !important;
+}
+
+ul.xi-footer__social > li::marker {
+  content: "" !important;
+  font-size: 0 !important;
+}
+
+.xi-footer__social-link,
+.xi-footer__social-link--static {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 2.7rem !important;
+  height: 2.7rem !important;
+  color: var(--xi-footer-text, var(--xi-color-text-inverse));
+  border-radius: 50%;
+  transition:
+    opacity var(--xi-transition-fast),
+    transform var(--xi-transition-fast),
+    background-color var(--xi-transition-fast);
+}
+
+.xi-footer__social-link {
+  opacity: 0.82;
+  cursor: pointer;
+}
+
+.xi-footer__social-link:hover {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+  cursor: pointer;
+}
+
+.xi-footer__social-link:hover .xi-footer__social-icon {
+  cursor: pointer;
+}
+
+.xi-footer__social-link:active {
+  transform: translateY(0);
+  background-color: rgba(255, 255, 255, 0.18);
+}
+
+.xi-footer__social-link--static {
+  cursor: default;
+  opacity: 0.8;
+}
+
+.xi-footer__social-link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--xi-footer-bg), 0 0 0 4px var(--xi-footer-text);
+  border-radius: 50%;
+}
+
+.xi-footer__social-icon {
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+  fill: currentColor;
+  display: block;
+  flex-shrink: 0;
+  transition: transform var(--xi-transition-fast);
+}
+
+.xi-footer__social-link:hover .xi-footer__social-icon {
+  transform: scale(1.06);
+}
+
+/* ==========================================================================
+   BOTTOM BAR — copyright + socials on one row.
+   Uses the SAME grid columns as .xi-footer__main so the social icons land
+   in the newsletter column, directly under the input (left-aligned to it).
+   ========================================================================== */
+
+.xi-footer__bar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--xi-space-xs);
+  padding-top: var(--xi-space-md);
+  padding-bottom: 0;
+}
+
+.xi-footer__bar-left {
+  display: flex;
+  align-items: center;
+}
+
+.xi-footer__bar-right {
+  display: flex;
+  align-items: center;
+}
+
+/* Tablet + small tablet: copyright left, socials right on the same row */
+@media screen and (min-width: 540px) and (max-width: 989px) {
+  .xi-footer__bar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--xi-space-md);
+    margin-top: var(--xi-space-lg);
+  }
+
+  .xi-footer__bar-right { justify-content: flex-end; }
+}
+
+/* Desktop: mirror the 5-col main grid so socials sit in the newsletter
+   column — i.e. directly under the email input, left-aligned to it. */
+@media screen and (min-width: 990px) {
+  .xi-footer__bar {
+    display: grid;
+    grid-template-columns: 1.1fr 0.75fr 0.75fr 0.75fr 1.65fr;
+    gap: var(--xi-space-lg) var(--xi-space-md);
+    align-items: center;
+  }
+
+  .xi-footer__bar-left  { grid-column: 1 / 5; }
+  .xi-footer__bar-right { grid-column: 5; justify-self: start; }
+}
+
+.xi-footer__copyright {
+  margin: 0 0 10px;
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  color: var(--xi-footer-muted, var(--xi-color-text-inverse-muted));
+}
+
+.xi-footer__policies {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--xi-space-sm) var(--xi-space-md);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.xi-footer__policy-link {
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  color: var(--xi-footer-muted, var(--xi-color-text-inverse-muted));
+  transition: color var(--xi-transition-fast);
+}
+
+.xi-footer__policy-link:hover {
+  color: var(--xi-footer-text, var(--xi-color-text-inverse));
+}
+
+.xi-footer__policy-link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--xi-footer-bg), 0 0 0 4px var(--xi-footer-text);
+}
+
+/* ==========================================================================
+   NON-DESKTOP shared — full-width email input below 990px
+   ========================================================================== */
+
+@media screen and (max-width: 989px) {
+  .xi-footer__newsletter-form .xi-newsletter__form {
+    width: 100%;
+    max-width: 22rem;
+  }
+}
+
+/* ==========================================================================
+   MOBILE — single column stack below 540px
+   ========================================================================== */
+
+@media screen and (max-width: 539px) {
+  .xi-footer__main {
+    gap: var(--xi-space-lg);
+    padding-bottom: 0;
+  }
+
+  .xi-footer__brand {
+    gap: var(--xi-space-sm);
+  }
+
+  .xi-footer__newsletter {
+    padding-top: var(--xi-space-md);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .xi-footer__column + .xi-footer__column {
+    margin-top: var(--xi-space-md);
+  }
+
+  .xi-footer__bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--xi-space-sm);
+    margin-top: var(--xi-space-lg);
+  }
+
+  ul.xi-footer__social {
+    justify-content: flex-start !important;
+  }
+}

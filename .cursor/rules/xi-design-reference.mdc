@@ -1,0 +1,38 @@
+---
+description: XI Elevated design reference — source of truth for all UI implementation
+alwaysApply: true
+---
+
+# XI Elevated Design Reference
+
+**Before implementing or modifying any UI**, consult the design reference image:
+
+`ui:ux/WhatsApp Image 2026-06-11 at 23.40.54.jpeg`
+
+This image is the **source of truth**. Match it pixel-perfectly. When the prompt and image conflict, follow the image.
+
+## Brand Aesthetic
+
+- Premium luxury outdoor dogwear — editorial, minimalist, high-end
+- Monochrome palette: black backgrounds, white typography, light gray product surfaces
+- Generous breathing room and editorial spacing — never cramped
+- Clean sans-serif, uppercase headings with letter-spacing, restrained body text
+
+## Key UI Patterns (from reference)
+
+| Area | Spec |
+|------|------|
+| **Header** | Centered XI ELEVATED logo; hamburger left; search / account / cart right; transparent over hero |
+| **Hero** | Full-bleed lifestyle photography; white uppercase headline; minimal CTA |
+| **Product cards** | Light gray media bg; color name → type → price; no clutter |
+| **Trust bar** | Light bg; icon + bold label + subtext columns |
+| **Footer** | Black bg; 5 columns (brand, SHOP, INFO, SUPPORT, newsletter); underline email input + arrow submit; bottom bar: copyright left, social right |
+| **Newsletter** | "JOIN THE PACK" heading; thin underline input; arrow submit |
+
+## Implementation Rules
+
+1. Read or re-check the reference image at the start of every UI phase or section build
+2. Use existing `xi-*` snippets, design tokens (`xi-design-system.css`), and conventions
+3. Do not delete Horizon files — replace active wiring via section groups and templates
+4. Prefix all custom presentation files with `xi-`
+5. Verify desktop, tablet, and mobile against the reference layout intent

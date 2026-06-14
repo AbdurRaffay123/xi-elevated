@@ -1,0 +1,177 @@
+{%- comment -%}
+  XI Product Main — PDP sections 1–3 (via global header) + product hero.
+  Announcement bar + navbar: header-group (theme.liquid).
+  Product details: breadcrumbs, gallery, buy box.
+{%- endcomment -%}
+
+{%- liquid
+  assign xi_drop_label = section.settings.drop_label
+  if xi_drop_label == blank
+    assign xi_drop_label = product.metafields.custom.drop_label.value
+  endif
+
+  assign xi_size_guide_url = section.settings.size_guide_url
+  if xi_size_guide_url == blank
+    assign xi_size_guide_url = '/pages/sizing-guide'
+  endif
+-%}
+
+<div
+  class="xi-product"
+  data-xi-product="{{ section.id }}"
+  style="
+    --xi-product-pad-top: {{ section.settings.padding_top }}px;
+    --xi-product-pad-bottom: {{ section.settings.padding_bottom }}px;
+  "
+  {{ section.shopify_attributes }}
+>
+  <div class="xi-product__inner xi-container xi-container--wide">
+    <div class="xi-product__hero">
+      <div class="xi-product__gallery">
+        {% render 'xi-product-media', product: product %}
+      </div>
+
+      <div class="xi-product__buybox">
+        {% render 'xi-breadcrumbs', product: product, class: 'xi-product__breadcrumbs' %}
+
+        <h1 class="xi-product__title xi-type-product-title">{{ product.title | escape }}</h1>
+
+        {%- if xi_drop_label != blank -%}
+          <p class="xi-product__drop-label xi-type-eyebrow">{{ xi_drop_label | escape }}</p>
+        {%- endif -%}
+
+        <div class="xi-product__price" id="price-{{ section.id }}">
+          {% render 'price', product_resource: product, show_sale_price_first: true %}
+        </div>
+
+        {% render 'xi-product-variant-picker', product: product, section: section %}
+
+        {%- if section.settings.show_size_guide -%}
+          <a class="xi-product__size-guide" href="{{ xi_size_guide_url }}">
+            {% render 'xi-icons', icon: 'ruler', size: 'sm' %}
+            <span>{{ section.settings.size_guide_label | escape }}</span>
+          </a>
+        {%- endif -%}
+
+        {% render 'xi-product-buy-buttons', product: product, section: section %}
+
+        {%- if section.settings.show_mini_trust -%}
+          {% render 'xi-product-mini-trust',
+            shipping_title: section.settings.mini_trust_shipping_title,
+            shipping_sub: section.settings.mini_trust_shipping_sub,
+            secure_title: section.settings.mini_trust_secure_title,
+            secure_sub: section.settings.mini_trust_secure_sub
+          %}
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="application/ld+json">
+  {{ product | structured_data }}
+</script>
+
+{% schema %}
+{
+  "name": "XI Product Main",
+  "tag": "section",
+  "class": "xi-product-section",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Product info"
+    },
+    {
+      "type": "text",
+      "id": "drop_label",
+      "label": "Drop / collection label",
+      "info": "Shown below the product title. Falls back to product metafield custom.drop_label.",
+      "default": "Drop 001 — Off Grid Club"
+    },
+    {
+      "type": "header",
+      "content": "Size guide"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_size_guide",
+      "label": "Show size guide link",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "size_guide_label",
+      "label": "Size guide label",
+      "default": "Size guide"
+    },
+    {
+      "type": "url",
+      "id": "size_guide_url",
+      "label": "Size guide URL"
+    },
+    {
+      "type": "header",
+      "content": "Mini trust row"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_mini_trust",
+      "label": "Show mini trust row",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "mini_trust_shipping_title",
+      "label": "Shipping title",
+      "default": "Free shipping"
+    },
+    {
+      "type": "text",
+      "id": "mini_trust_shipping_sub",
+      "label": "Shipping subline",
+      "default": "On orders over $150"
+    },
+    {
+      "type": "text",
+      "id": "mini_trust_secure_title",
+      "label": "Secure checkout title",
+      "default": "Secure checkout"
+    },
+    {
+      "type": "text",
+      "id": "mini_trust_secure_sub",
+      "label": "Secure checkout subline",
+      "default": "Safe & encrypted"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "presets": [{ "name": "XI Product Main" }]
+}
+{% endschema %}

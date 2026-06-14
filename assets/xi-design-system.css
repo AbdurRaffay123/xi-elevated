@@ -1,0 +1,945 @@
+/**
+ * XI Elevated — Design System
+ * Single source of truth for brand tokens, primitives, and utilities.
+ * Load after Horizon base.css.
+ */
+
+/* ==========================================================================
+   ROOT TOKENS
+   ========================================================================== */
+
+:root {
+  /* --------------------------------------------------------------------------
+     Colors — Luxury outdoor palette
+     -------------------------------------------------------------------------- */
+  --xi-color-black: #000000;
+  --xi-color-white: #ffffff;
+  --xi-color-off-white: #f2f2f2;
+  --xi-color-product-gray: #e8e8e8;
+
+  /* Product swatch tones */
+  --xi-color-charcoal: #3d3d3d;
+  --xi-color-product-black: #1a1a1a;
+  --xi-color-oatmeal: #d9cfc0;
+  --xi-color-sage: #9aa89a;
+  --xi-color-blue: #4a6d8c;
+  --xi-color-navy: #1e2a44;
+  --xi-color-sand: #c9bfb0;
+  --xi-color-burgundy: #6e3f3f;
+
+  /* UI text & borders */
+  --xi-color-text: #000000;
+  --xi-color-text-muted: #666666;
+  --xi-color-text-inverse: #ffffff;
+  --xi-color-text-inverse-muted: rgba(255, 255, 255, 0.75);
+  --xi-color-border: #000000;
+  --xi-color-border-light: #e0e0e0;
+  --xi-color-border-muted: rgba(0, 0, 0, 0.12);
+
+  /* Surfaces */
+  --xi-color-surface: var(--xi-color-white);
+  --xi-color-surface-alt: var(--xi-color-off-white);
+  --xi-color-surface-dark: var(--xi-color-black);
+  --xi-color-surface-product: var(--xi-color-product-gray);
+
+  /* Overlays */
+  --xi-color-overlay-dark: rgba(0, 0, 0, 0.35);
+  --xi-color-overlay-gradient: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.2) 45%,
+    rgba(0, 0, 0, 0) 100%
+  );
+
+  /* Focus */
+  --xi-color-focus: var(--xi-color-black);
+  --xi-focus-ring: 0 0 0 2px var(--xi-color-white), 0 0 0 4px var(--xi-color-black);
+
+  /* --------------------------------------------------------------------------
+     Typography — families
+     Maps to Horizon Shopify font settings via fallbacks until custom fonts ship.
+     -------------------------------------------------------------------------- */
+  --xi-font-sans: var(--font-body--family, 'Inter', 'Helvetica Neue', Arial, sans-serif);
+  --xi-font-display: var(--font-heading--family, 'Inter', 'Helvetica Neue', Arial, sans-serif);
+  --xi-font-logo-serif: 'Cormorant Garamond', 'Playfair Display', Georgia, 'Times New Roman', serif;
+
+  /* --------------------------------------------------------------------------
+     Typography — scale (desktop)
+     -------------------------------------------------------------------------- */
+  --xi-text-hero-size: clamp(2rem, 5vw, 3.5rem);
+  --xi-text-hero-lh: 1.05;
+  --xi-text-hero-ls: 0.04em;
+
+  --xi-text-section-size: clamp(1.5rem, 3vw, 2.25rem);
+  --xi-text-section-lh: 1.1;
+  --xi-text-section-ls: 0.06em;
+
+  --xi-text-product-title-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  --xi-text-product-title-lh: 1.15;
+  --xi-text-product-title-ls: 0.05em;
+
+  --xi-text-eyebrow-size: clamp(0.6875rem, 1.5vw, 0.8125rem);
+  --xi-text-eyebrow-lh: 1.4;
+  --xi-text-eyebrow-ls: 0.14em;
+
+  --xi-text-body-size: clamp(0.9375rem, 1.5vw, 1rem);
+  --xi-text-body-lh: 1.65;
+
+  /* Collection story body + brand story subheading */
+  --xi-text-editorial-support-size: calc(var(--xi-text-body-size) * 2 - 11px);
+  --xi-text-editorial-support-lh: 1.35;
+
+  --xi-text-price-size: clamp(1rem, 2vw, 1.125rem);
+  --xi-text-price-lh: 1.2;
+  --xi-text-price-ls: 0.02em;
+
+  --xi-text-nav-size: 0.8125rem;
+  --xi-text-nav-lh: 1.2;
+  --xi-text-nav-ls: 0.08em;
+
+  --xi-text-footer-heading-size: 0.75rem;
+  --xi-text-footer-heading-ls: 0.12em;
+
+  --xi-text-footer-link-size: 0.875rem;
+  --xi-text-footer-link-lh: 1.6;
+
+  --xi-text-announcement-size: 0.6875rem;
+  --xi-text-announcement-ls: 0.1em;
+
+  --xi-text-breadcrumb-size: 0.6875rem;
+  --xi-text-breadcrumb-ls: 0.06em;
+
+  /* --------------------------------------------------------------------------
+     Spacing — 8px scale
+     -------------------------------------------------------------------------- */
+  --xi-space-xs: 0.5rem;   /*  8px */
+  --xi-space-sm: 1rem;     /* 16px */
+  --xi-space-md: 1.5rem;   /* 24px */
+  --xi-space-lg: 3rem;     /* 48px */
+  --xi-space-xl: 5rem;     /* 80px */
+  --xi-space-2xl: 7.5rem;  /* 120px */
+  --xi-space-3xl: 10rem;   /* 160px */
+
+  /* --------------------------------------------------------------------------
+     Layout — containers
+     -------------------------------------------------------------------------- */
+  --xi-container-narrow: 67.5rem;   /* 1080px */
+  --xi-container-standard: 80rem;  /* 1280px */
+  --xi-container-wide: 87.5rem;    /* 1400px */
+  --xi-container-padding: var(--xi-space-md);
+  --xi-container-padding-mobile: var(--xi-space-sm);
+
+  /* --------------------------------------------------------------------------
+     Layout — grid
+     -------------------------------------------------------------------------- */
+  --xi-grid-gap: var(--xi-space-sm);
+  --xi-grid-gap-lg: var(--xi-space-md);
+  --xi-product-grid-columns: 4;
+  --xi-product-grid-columns-tablet: 3;
+  --xi-product-grid-columns-mobile: 2;
+
+  /* --------------------------------------------------------------------------
+     Borders & radius
+     -------------------------------------------------------------------------- */
+  --xi-radius-none: 0;
+  --xi-radius-sm: 2px;
+  --xi-radius-md: 4px;
+  --xi-border-width: 1px;
+  --xi-border-width-thick: 2px;
+
+  /* --------------------------------------------------------------------------
+     Buttons
+     -------------------------------------------------------------------------- */
+  --xi-btn-height: 3rem;
+  --xi-btn-height-sm: 2.5rem;
+  --xi-btn-padding-x: var(--xi-space-md);
+  --xi-btn-font-size: 0.8125rem;
+  --xi-btn-letter-spacing: 0.1em;
+  --xi-btn-radius: var(--xi-radius-none);
+  --xi-btn-transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+
+  /* --------------------------------------------------------------------------
+     Cards
+     -------------------------------------------------------------------------- */
+  --xi-card-bg: var(--xi-color-surface-product);
+  --xi-card-gap: var(--xi-space-xs);
+  --xi-card-image-ratio: 1 / 1;
+  --xi-card-hover-opacity: 0.92;
+
+  /* --------------------------------------------------------------------------
+     Forms
+     -------------------------------------------------------------------------- */
+  --xi-input-height: 3rem;
+  --xi-input-padding-x: var(--xi-space-sm);
+  --xi-input-border: var(--xi-border-width) solid var(--xi-color-border-light);
+  --xi-input-radius: var(--xi-radius-none);
+  --xi-input-bg: var(--xi-color-white);
+  --xi-input-font-size: var(--xi-text-body-size);
+
+  --xi-swatch-size: 2rem;
+  --xi-swatch-size-lg: 2.25rem;
+  --xi-swatch-ring: 2px;
+
+  --xi-size-box-min-width: 2.75rem;
+  --xi-size-box-height: 2.75rem;
+
+  /* --------------------------------------------------------------------------
+     Accordion
+     -------------------------------------------------------------------------- */
+  --xi-accordion-border: var(--xi-border-width) solid var(--xi-color-border-light);
+  --xi-accordion-padding-y: var(--xi-space-md);
+  --xi-accordion-heading-size: 0.8125rem;
+  --xi-accordion-heading-ls: 0.1em;
+
+  /* --------------------------------------------------------------------------
+     Icons
+     -------------------------------------------------------------------------- */
+  --xi-icon-size-sm: 1rem;
+  --xi-icon-size-md: 1.25rem;
+  --xi-icon-size-lg: 1.5rem;
+  --xi-icon-stroke: 1.5;
+
+  /* --------------------------------------------------------------------------
+     Motion
+     -------------------------------------------------------------------------- */
+  --xi-transition-fast: 0.15s ease;
+  --xi-transition-base: 0.25s ease;
+  --xi-transition-slow: 0.4s ease;
+
+  /* --------------------------------------------------------------------------
+     Z-index
+     -------------------------------------------------------------------------- */
+  --xi-z-announcement: 500;
+  --xi-z-header: 600;
+  --xi-z-drawer: 700;
+  --xi-z-modal: 800;
+}
+
+/* ==========================================================================
+   BASE OVERRIDES — XI storefront defaults
+   ========================================================================== */
+
+html {
+  /* Guard against stray horizontal overflow site-wide. `clip` (vs `hidden`)
+     does not create a scroll container, so position: sticky headers and
+     nested horizontal scrollers (carousels) keep working. */
+  overflow-x: clip;
+}
+
+body {
+  font-family: var(--xi-font-sans);
+  font-size: var(--xi-text-body-size);
+  line-height: var(--xi-text-body-lh);
+  color: var(--xi-color-text);
+  background-color: var(--xi-color-surface);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+/* ==========================================================================
+   TYPOGRAPHY PRIMITIVES
+   ========================================================================== */
+
+.xi-type-hero {
+  font-family: var(--xi-font-display);
+  font-size: var(--xi-text-hero-size);
+  font-weight: 700;
+  line-height: var(--xi-text-hero-lh);
+  letter-spacing: var(--xi-text-hero-ls);
+  text-transform: uppercase;
+}
+
+.xi-type-section {
+  font-family: var(--xi-font-display);
+  font-size: var(--xi-text-section-size);
+  font-weight: 700;
+  line-height: var(--xi-text-section-lh);
+  letter-spacing: var(--xi-text-section-ls);
+  text-transform: uppercase;
+}
+
+.xi-type-product-title {
+  font-family: var(--xi-font-display);
+  font-size: var(--xi-text-product-title-size);
+  font-weight: 700;
+  line-height: var(--xi-text-product-title-lh);
+  letter-spacing: var(--xi-text-product-title-ls);
+  text-transform: uppercase;
+}
+
+.xi-type-eyebrow {
+  font-family: var(--xi-font-sans);
+  font-size: var(--xi-text-eyebrow-size);
+  font-weight: 500;
+  line-height: var(--xi-text-eyebrow-lh);
+  letter-spacing: var(--xi-text-eyebrow-ls);
+  text-transform: uppercase;
+}
+
+.xi-type-body {
+  font-family: var(--xi-font-sans);
+  font-size: var(--xi-text-body-size);
+  font-weight: 400;
+  line-height: var(--xi-text-body-lh);
+}
+
+.xi-type-price {
+  font-family: var(--xi-font-sans);
+  font-size: var(--xi-text-price-size);
+  font-weight: 500;
+  line-height: var(--xi-text-price-lh);
+  letter-spacing: var(--xi-text-price-ls);
+}
+
+.xi-type-nav {
+  font-family: var(--xi-font-sans);
+  font-size: var(--xi-text-nav-size);
+  font-weight: 500;
+  line-height: var(--xi-text-nav-lh);
+  letter-spacing: var(--xi-text-nav-ls);
+  text-transform: uppercase;
+}
+
+.xi-type-footer-heading {
+  font-family: var(--xi-font-sans);
+  font-size: var(--xi-text-footer-heading-size);
+  font-weight: 700;
+  letter-spacing: var(--xi-text-footer-heading-ls);
+  text-transform: uppercase;
+}
+
+.xi-type-footer-link {
+  font-family: var(--xi-font-sans);
+  font-size: var(--xi-text-footer-link-size);
+  font-weight: 400;
+  line-height: var(--xi-text-footer-link-lh);
+}
+
+.xi-type-muted {
+  color: var(--xi-color-text-muted);
+}
+
+.xi-type-inverse {
+  color: var(--xi-color-text-inverse);
+}
+
+/* ==========================================================================
+   CONTAINER SYSTEM
+   ========================================================================== */
+
+.xi-container {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: var(--xi-container-padding-mobile);
+}
+
+@media screen and (min-width: 750px) {
+  .xi-container {
+    padding-inline: var(--xi-container-padding);
+  }
+}
+
+.xi-container--narrow {
+  max-width: var(--xi-container-narrow);
+}
+
+.xi-container--standard {
+  max-width: var(--xi-container-standard);
+}
+
+.xi-container--wide {
+  max-width: var(--xi-container-wide);
+}
+
+.xi-container--full {
+  max-width: none;
+  padding-inline: 0;
+}
+
+/* Full-bleed section with optional inner container */
+.xi-section-full {
+  width: 100%;
+}
+
+/* ==========================================================================
+   BUTTON SYSTEM
+   ========================================================================== */
+
+.xi-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--xi-space-xs);
+  min-height: var(--xi-btn-height);
+  padding: 0 var(--xi-btn-padding-x);
+  font-family: var(--xi-font-sans);
+  font-size: var(--xi-btn-font-size);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: var(--xi-btn-letter-spacing);
+  text-transform: uppercase;
+  text-decoration: none;
+  border: var(--xi-border-width) solid transparent;
+  border-radius: var(--xi-btn-radius);
+  cursor: pointer;
+  transition: var(--xi-btn-transition);
+  white-space: nowrap;
+}
+
+.xi-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--xi-focus-ring);
+}
+
+.xi-btn--block {
+  display: flex;
+  width: 100%;
+}
+
+.xi-btn--sm {
+  min-height: var(--xi-btn-height-sm);
+  font-size: 0.75rem;
+}
+
+/* Solid black — PDP Add to Cart */
+.xi-btn--primary {
+  color: var(--xi-color-text-inverse);
+  background-color: var(--xi-color-black);
+  border-color: var(--xi-color-black);
+}
+
+.xi-btn--primary:hover {
+  background-color: #1a1a1a;
+  border-color: #1a1a1a;
+}
+
+.xi-btn--primary:disabled,
+.xi-btn--primary[aria-disabled='true'] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* White fill + black border — PDP Buy It Now */
+.xi-btn--secondary {
+  color: var(--xi-color-text);
+  background-color: var(--xi-color-white);
+  border-color: var(--xi-color-border);
+}
+
+.xi-btn--secondary:hover {
+  background-color: var(--xi-color-off-white);
+}
+
+/* Transparent on imagery — hero CTAs */
+.xi-btn--ghost {
+  color: var(--xi-color-text-inverse);
+  background-color: transparent;
+  border-color: var(--xi-color-text-inverse);
+}
+
+.xi-btn--ghost:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Ghost on light backgrounds */
+.xi-btn--ghost-dark {
+  color: var(--xi-color-text);
+  background-color: transparent;
+  border-color: var(--xi-color-border);
+}
+
+.xi-btn--ghost-dark:hover {
+  background-color: var(--xi-color-off-white);
+}
+
+/* Underlined text — VIEW ALL, SIZE GUIDE */
+.xi-btn--link,
+.xi-link {
+  display: inline;
+  padding: 0;
+  min-height: auto;
+  font-family: var(--xi-font-sans);
+  font-size: inherit;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: opacity var(--xi-transition-fast);
+}
+
+.xi-btn--link:hover,
+.xi-link:hover {
+  opacity: 0.65;
+}
+
+/* ==========================================================================
+   CARD FOUNDATION
+   ========================================================================== */
+
+.xi-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--xi-card-gap);
+  text-decoration: none;
+  color: inherit;
+}
+
+.xi-card__media {
+  position: relative;
+  aspect-ratio: var(--xi-card-image-ratio);
+  background-color: var(--xi-card-bg);
+  overflow: hidden;
+}
+
+.xi-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--xi-transition-slow), opacity var(--xi-transition-base);
+}
+
+.xi-card:hover .xi-card__media img {
+  transform: scale(1.02);
+  opacity: var(--xi-card-hover-opacity);
+}
+
+.xi-card__color {
+  font-size: var(--xi-text-eyebrow-size);
+  font-weight: 500;
+  letter-spacing: var(--xi-text-eyebrow-ls);
+  text-transform: uppercase;
+  color: var(--xi-color-text-muted);
+}
+
+.xi-card__title {
+  font-size: var(--xi-text-eyebrow-size);
+  font-weight: 700;
+  letter-spacing: var(--xi-text-eyebrow-ls);
+  text-transform: uppercase;
+}
+
+.xi-card__price {
+  font-size: var(--xi-text-price-size);
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   FORM SYSTEM
+   ========================================================================== */
+
+.xi-input {
+  width: 100%;
+  height: var(--xi-input-height);
+  padding: 0 var(--xi-input-padding-x);
+  font-family: var(--xi-font-sans);
+  font-size: var(--xi-input-font-size);
+  color: var(--xi-color-text);
+  background-color: var(--xi-input-bg);
+  border: var(--xi-input-border);
+  border-radius: var(--xi-input-radius);
+  transition: border-color var(--xi-transition-fast);
+}
+
+.xi-input:focus {
+  outline: none;
+  border-color: var(--xi-color-black);
+}
+
+.xi-input::placeholder {
+  color: var(--xi-color-text-muted);
+}
+
+/* Newsletter — dark footer variant */
+.xi-input--inverse {
+  color: var(--xi-color-text-inverse);
+  background-color: transparent;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.xi-input--inverse::placeholder {
+  color: var(--xi-color-text-inverse-muted);
+}
+
+.xi-input--inverse:focus {
+  border-color: var(--xi-color-white);
+}
+
+/* Size selector boxes */
+.xi-size-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--xi-size-box-min-width);
+  height: var(--xi-size-box-height);
+  padding: 0 var(--xi-space-xs);
+  font-family: var(--xi-font-sans);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--xi-color-text);
+  background-color: var(--xi-color-white);
+  border: var(--xi-border-width) solid var(--xi-color-border-light);
+  cursor: pointer;
+  transition: var(--xi-btn-transition);
+}
+
+.xi-size-box:hover:not(:disabled):not([aria-disabled='true']) {
+  border-color: var(--xi-color-border);
+}
+
+.xi-size-box--selected,
+.xi-size-box[aria-checked='true'] {
+  color: var(--xi-color-text-inverse);
+  background-color: var(--xi-color-black);
+  border-color: var(--xi-color-black);
+}
+
+.xi-size-box:disabled,
+.xi-size-box[aria-disabled='true'] {
+  opacity: 0.35;
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+.xi-size-boxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--xi-space-xs);
+}
+
+/* Color swatches */
+.xi-swatch {
+  display: inline-block;
+  width: var(--xi-swatch-size);
+  height: var(--xi-swatch-size);
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: box-shadow var(--xi-transition-fast), transform var(--xi-transition-fast);
+}
+
+.xi-swatch--lg {
+  width: var(--xi-swatch-size-lg);
+  height: var(--xi-swatch-size-lg);
+}
+
+.xi-swatch--selected,
+.xi-swatch[aria-checked='true'] {
+  box-shadow: 0 0 0 var(--xi-swatch-ring) var(--xi-color-white),
+    0 0 0 calc(var(--xi-swatch-ring) + 2px) var(--xi-color-black);
+}
+
+.xi-swatch:hover:not(:disabled) {
+  transform: scale(1.08);
+}
+
+.xi-swatch[data-color='charcoal'] {
+  background-color: var(--xi-color-charcoal);
+}
+
+.xi-swatch[data-color='black'] {
+  background-color: var(--xi-color-product-black);
+}
+
+.xi-swatch[data-color='oatmeal'] {
+  background-color: var(--xi-color-oatmeal);
+}
+
+.xi-swatch[data-color='sage'] {
+  background-color: var(--xi-color-sage);
+}
+
+.xi-swatch[data-color='blue'] {
+  background-color: var(--xi-color-blue);
+}
+
+.xi-swatch[data-color='navy'] {
+  background-color: var(--xi-color-navy);
+}
+
+.xi-swatch[data-color='sand'] {
+  background-color: var(--xi-color-sand);
+}
+
+.xi-swatch[data-color='burgundy'] {
+  background-color: var(--xi-color-burgundy);
+}
+
+.xi-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--xi-space-sm);
+  align-items: center;
+}
+
+.xi-swatch-label {
+  font-size: var(--xi-text-eyebrow-size);
+  font-weight: 500;
+  letter-spacing: var(--xi-text-eyebrow-ls);
+  text-transform: uppercase;
+}
+
+/* Select / dropdown */
+.xi-select {
+  appearance: none;
+  width: 100%;
+  height: var(--xi-input-height);
+  padding: 0 calc(var(--xi-input-padding-x) + 1.5rem) 0 var(--xi-input-padding-x);
+  font-family: var(--xi-font-sans);
+  font-size: var(--xi-input-font-size);
+  color: var(--xi-color-text);
+  background-color: var(--xi-input-bg);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23000' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--xi-space-sm) center;
+  border: var(--xi-input-border);
+  border-radius: var(--xi-input-radius);
+  cursor: pointer;
+}
+
+.xi-select:focus {
+  outline: none;
+  border-color: var(--xi-color-black);
+}
+
+/* ==========================================================================
+   ACCORDION SYSTEM
+   ========================================================================== */
+
+.xi-accordion {
+  border-top: var(--xi-accordion-border);
+}
+
+.xi-accordion__item {
+  border-bottom: var(--xi-accordion-border);
+}
+
+.xi-accordion__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--xi-accordion-padding-y) 0;
+  font-family: var(--xi-font-sans);
+  font-size: var(--xi-accordion-heading-size);
+  font-weight: 600;
+  letter-spacing: var(--xi-accordion-heading-ls);
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--xi-color-text);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.xi-accordion__trigger:focus-visible {
+  outline: none;
+  box-shadow: var(--xi-focus-ring);
+}
+
+.xi-accordion__icon {
+  flex-shrink: 0;
+  width: var(--xi-icon-size-sm);
+  height: var(--xi-icon-size-sm);
+  transition: transform var(--xi-transition-base);
+}
+
+.xi-accordion__item[open] .xi-accordion__icon,
+.xi-accordion__trigger[aria-expanded='true'] .xi-accordion__icon {
+  transform: rotate(180deg);
+}
+
+.xi-accordion__panel {
+  padding-bottom: var(--xi-accordion-padding-y);
+  font-size: var(--xi-text-body-size);
+  line-height: var(--xi-text-body-lh);
+  color: var(--xi-color-text);
+}
+
+.xi-accordion__feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--xi-space-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.xi-accordion__feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--xi-space-sm);
+}
+
+/* ==========================================================================
+   UTILITY SYSTEM
+   ========================================================================== */
+
+/* Section spacing */
+.xi-section-padding {
+  padding-block: var(--xi-space-xl);
+}
+
+.xi-section-padding--sm {
+  padding-block: var(--xi-space-lg);
+}
+
+.xi-section-padding--lg {
+  padding-block: var(--xi-space-2xl);
+}
+
+@media screen and (max-width: 749px) {
+  .xi-section-padding {
+    padding-block: var(--xi-space-lg);
+  }
+
+  .xi-section-padding--lg {
+    padding-block: var(--xi-space-xl);
+  }
+}
+
+/* Text alignment */
+.xi-text-left {
+  text-align: left;
+}
+
+.xi-text-center {
+  text-align: center;
+}
+
+.xi-text-right {
+  text-align: right;
+}
+
+/* Visibility */
+.xi-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.xi-hidden-mobile {
+  display: none;
+}
+
+.xi-hidden-desktop {
+  display: block;
+}
+
+@media screen and (min-width: 750px) {
+  .xi-hidden-mobile {
+    display: block;
+  }
+
+  .xi-hidden-desktop {
+    display: none;
+  }
+}
+
+/* Grid helpers */
+.xi-grid {
+  display: grid;
+  gap: var(--xi-grid-gap);
+}
+
+.xi-grid--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.xi-grid--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.xi-grid--4 {
+  grid-template-columns: repeat(var(--xi-product-grid-columns-mobile), 1fr);
+}
+
+@media screen and (min-width: 750px) {
+  .xi-grid--4 {
+    grid-template-columns: repeat(var(--xi-product-grid-columns-tablet), 1fr);
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .xi-grid--4 {
+    grid-template-columns: repeat(var(--xi-product-grid-columns), 1fr);
+  }
+}
+
+.xi-grid--split {
+  grid-template-columns: 1fr;
+}
+
+@media screen and (min-width: 990px) {
+  .xi-grid--split {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--xi-space-lg);
+  }
+}
+
+/* Flex helpers */
+.xi-flex {
+  display: flex;
+}
+
+.xi-flex--center {
+  align-items: center;
+  justify-content: center;
+}
+
+.xi-flex--between {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.xi-flex--column {
+  flex-direction: column;
+}
+
+.xi-gap-xs { gap: var(--xi-space-xs); }
+.xi-gap-sm { gap: var(--xi-space-sm); }
+.xi-gap-md { gap: var(--xi-space-md); }
+.xi-gap-lg { gap: var(--xi-space-lg); }
+
+/* Surface helpers */
+.xi-surface-alt {
+  background-color: var(--xi-color-surface-alt);
+}
+
+.xi-surface-dark {
+  background-color: var(--xi-color-surface-dark);
+  color: var(--xi-color-text-inverse);
+}
+
+.xi-surface-product {
+  background-color: var(--xi-color-surface-product);
+}
+
+/* Stack — vertical rhythm */
+.xi-stack-sm > * + * {
+  margin-top: var(--xi-space-sm);
+}
+
+.xi-stack-md > * + * {
+  margin-top: var(--xi-space-md);
+}
+
+.xi-stack-lg > * + * {
+  margin-top: var(--xi-space-lg);
+}

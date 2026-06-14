@@ -1,0 +1,109 @@
+{%- doc -%}
+  Inline newsletter signup for the XI footer ("JOIN THE PACK").
+
+  @param {string} [suffix] - Unique ID suffix for labels and messages. Default: 'footer'
+  @param {string} [heading] - Optional visible heading above the form
+  @param {string} [description] - Supporting copy below the heading
+  @param {string} [placeholder] - Email input placeholder
+  @param {string} [class] - Additional wrapper classes
+  @param {string} [variant] - 'footer' (dark box), 'underline', or 'boxed' (default)
+  @param {string} [after_form] - Optional HTML rendered directly below the form (e.g. footer social icons)
+{%- enddoc -%}
+
+{% liquid
+  assign xi_newsletter_suffix = suffix | default: 'footer'
+  assign xi_newsletter_input_id = 'XiNewsletterEmail-' | append: xi_newsletter_suffix
+  assign xi_newsletter_error_id = 'XiNewsletterError-' | append: xi_newsletter_suffix
+  assign xi_newsletter_success_id = 'XiNewsletterSuccess-' | append: xi_newsletter_suffix
+  assign xi_newsletter_variant = variant | default: 'boxed'
+
+  if placeholder != blank
+    assign xi_newsletter_placeholder = placeholder
+  else
+    assign xi_newsletter_placeholder = 'blocks.email_signup.placeholder' | t
+  endif
+
+  assign xi_newsletter_classes = 'xi-newsletter'
+  if xi_newsletter_variant == 'underline'
+    assign xi_newsletter_classes = xi_newsletter_classes | append: ' xi-newsletter--underline'
+  elsif xi_newsletter_variant == 'footer'
+    assign xi_newsletter_classes = xi_newsletter_classes | append: ' xi-newsletter--footer'
+  endif
+  if class != blank
+    assign xi_newsletter_classes = xi_newsletter_classes | append: ' ' | append: class
+  endif
+%}
+
+<div class="{{ xi_newsletter_classes }}">
+  {% if heading != blank %}
+    <h3 class="xi-newsletter__heading xi-type-footer-heading">{{ heading | escape }}</h3>
+  {% endif %}
+
+  {% if description != blank %}
+    <p class="xi-newsletter__description">{{ description | escape }}</p>
+  {% endif %}
+
+  {%- form 'customer', class: 'xi-newsletter__form' -%}
+    <input type="hidden" name="contact[tags]" value="newsletter">
+
+    <div class="xi-newsletter__field">
+      <label class="xi-visually-hidden" for="{{ xi_newsletter_input_id }}">
+        {{ 'blocks.email_signup.label' | t }}
+      </label>
+
+      <input
+        id="{{ xi_newsletter_input_id }}"
+        class="xi-newsletter__input"
+        type="email"
+        name="contact[email]"
+        value="{{ form.email }}"
+        placeholder="{{ xi_newsletter_placeholder | escape }}"
+        autocomplete="email"
+        autocorrect="off"
+        autocapitalize="off"
+        required
+        {% if form.errors %}
+          aria-invalid="true"
+          aria-describedby="{{ xi_newsletter_error_id }}"
+        {% elsif form.posted_successfully? %}
+          aria-describedby="{{ xi_newsletter_success_id }}"
+        {% endif %}
+      >
+
+      <button
+        type="submit"
+        class="xi-newsletter__submit"
+        aria-label="{{ 'actions.sign_up' | t }}"
+      >
+        {% render 'xi-icons', icon: 'arrow', size: 'sm' %}
+      </button>
+    </div>
+
+    {%- if form.errors -%}
+      <div
+        id="{{ xi_newsletter_error_id }}"
+        class="xi-newsletter__message xi-newsletter__message--error"
+        role="alert"
+        tabindex="-1"
+      >
+        {% render 'xi-icons', icon: 'close', size: 'sm', label: 'Error' %}
+        <span>
+          {{- form.errors.translated_fields.email | capitalize }}
+          {{ form.errors.messages.email -}}
+        </span>
+      </div>
+    {%- endif -%}
+
+    {%- if form.posted_successfully? -%}
+      <div
+        id="{{ xi_newsletter_success_id }}"
+        class="xi-newsletter__message xi-newsletter__message--success"
+        role="status"
+        tabindex="-1"
+      >
+        <span>{{ 'blocks.email_signup.success' | t }}</span>
+      </div>
+    {%- endif -%}
+  {%- endform -%}
+
+</div>

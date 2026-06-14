@@ -1,0 +1,51 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "Footer",
+  "sections": {
+    "xi_footer": {
+      "type": "xi-footer",
+      "settings": {
+        "logo_image": "",
+        "logo_width": 140,
+        "logo_link": true,
+        "mission_text": "<p>Elevated dogwear.<br>Built with purpose.<br>Designed to last.</p>",
+        "shop_menu": "main-menu",
+        "shop_heading": "Shop",
+        "info_menu": "",
+        "info_heading": "Info",
+        "support_menu": "",
+        "support_heading": "Support",
+        "newsletter_heading": "Join the Pack",
+        "newsletter_description": "Get early access to new drops and exclusive offers.",
+        "newsletter_placeholder": "Enter your email",
+        "copyright_text": "",
+        "show_policy_links": false,
+        "show_social_icons": true,
+        "policies_label": "Store policies",
+        "social_label": "Social media",
+        "instagram_url": "",
+        "tiktok_url": "",
+        "facebook_url": "",
+        "pinterest_url": "",
+        "youtube_url": "",
+        "background_color": "#000000",
+        "text_color": "#ffffff",
+        "muted_text_color": "#999999",
+        "padding_top": 56,
+        "padding_bottom": 32
+      }
+    }
+  },
+  "order": [
+    "xi_footer"
+  ]
+}

@@ -1,0 +1,262 @@
+{%- comment -%}
+  XI Product Grid — "The Collection" editorial product row.
+  Section header (title + view all) + responsive 4-column product grid.
+{%- endcomment -%}
+
+{%- liquid
+  assign collection = section.settings.collection
+  assign products_limit = section.settings.products_to_show
+  assign show_view_all = section.settings.show_view_all
+  assign view_all_label = section.settings.view_all_label
+  assign view_all_url = routes.all_products_collection_url
+
+  if collection != blank
+    assign view_all_url = collection.url
+  endif
+
+  assign product_source = collection
+  if product_source == blank or product_source.products_count == 0
+    assign product_source = collections.all
+    if product_source != blank and product_source.products_count > 0 and collection == blank
+      assign view_all_url = product_source.url
+    endif
+  endif
+
+  assign has_products = false
+  if product_source != blank and product_source.products_count > 0
+    assign has_products = true
+  endif
+
+  assign show_view_all_link = show_view_all
+  unless has_products
+    assign show_view_all_link = false
+  endunless
+
+  assign onboarding_colors = 'Charcoal,Black,Oatmeal,Sage' | split: ','
+-%}
+
+<div
+  class="xi-product-grid"
+  data-xi-product-grid="{{ section.id }}"
+  style="
+    --xi-product-grid-bg: {{ section.settings.background_color }};
+    --xi-product-grid-pad-top: {{ section.settings.padding_top }}px;
+    --xi-product-grid-pad-bottom: {{ section.settings.padding_bottom }}px;
+    --xi-product-grid-columns: {{ section.settings.columns_desktop }};
+    --xi-product-grid-columns-tablet: {{ section.settings.columns_tablet }};
+    --xi-product-grid-columns-mobile: {{ section.settings.columns_mobile }};
+  "
+  {{ section.shopify_attributes }}
+>
+  <div class="xi-product-grid__inner xi-container xi-container--wide">
+    {%- if section.settings.heading != blank or show_view_all -%}
+      <header class="xi-section-header xi-product-grid__header">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="xi-section-header__title xi-type-product-title">
+            {{ section.settings.heading | escape }}
+          </h2>
+        {%- endif -%}
+
+        {%- if show_view_all_link and view_all_label != blank -%}
+          <a class="xi-section-header__link" href="{{ view_all_url }}">
+            {{ view_all_label | escape }}
+          </a>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+
+    {%- if request.design_mode and has_products == false -%}
+      <p class="xi-product-grid__empty-note">
+        Add products in Shopify Admin and assign a collection here to enable product links.
+      </p>
+    {%- endif -%}
+
+    <div class="xi-product-grid__carousel">
+      <div class="xi-product-grid__track" data-xi-product-grid-track tabindex="0">
+        <ul class="xi-product-grid__list" role="list">
+          {%- if has_products -%}
+            {%- for product in product_source.products limit: products_limit -%}
+              <li class="xi-product-grid__item">
+                {% render 'xi-product-card',
+                  product: product,
+                  show_secondary_image: section.settings.show_secondary_image,
+                  loading: 'lazy'
+                %}
+              </li>
+            {%- endfor -%}
+          {%- else -%}
+            {%- for color_name in onboarding_colors -%}
+              {%- liquid
+                case forloop.index0
+                  when 0
+                    assign onboarding_swatch = 'charcoal'
+                  when 1
+                    assign onboarding_swatch = 'black'
+                  when 2
+                    assign onboarding_swatch = 'oatmeal'
+                  when 3
+                    assign onboarding_swatch = 'sage'
+                  else
+                    assign onboarding_swatch = 'charcoal'
+                endcase
+              -%}
+              <li class="xi-product-grid__item">
+                {% render 'xi-product-card',
+                  product: blank,
+                  color_name: color_name,
+                  swatch_color: onboarding_swatch,
+                  product_type: 'Hoodie',
+                  price_cents: 6995,
+                  link_enabled: false
+                %}
+              </li>
+            {%- endfor -%}
+          {%- endif -%}
+        </ul>
+      </div>
+
+      <button
+        type="button"
+        class="xi-product-grid__arrow"
+        data-xi-product-grid-arrow
+        aria-label="Next"
+      >
+        {%- render 'xi-icons', icon: 'chevron-right', size: 'sm', stroke_width: 1.5 -%}
+      </button>
+    </div>
+  </div>
+</div>
+
+{%- if has_products -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": {{ section.settings.heading | default: 'The Collection' | json }},
+      "itemListElement": [
+        {%- for product in product_source.products limit: products_limit -%}
+          {
+            "@type": "ListItem",
+            "position": {{ forloop.index }},
+            "url": {{ request.origin | append: product.url | json }},
+            "name": {{ product.title | json }}
+          }{%- unless forloop.last -%},{%- endunless -%}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "XI Product Grid",
+  "tag": "section",
+  "class": "xi-home__section-slot xi-home__section-slot--product-grid",
+  "enabled_on": {
+    "templates": ["index"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The Collection"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show view all link",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "View all label",
+      "default": "View all"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "label": "Show second image on hover",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns (desktop)",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "columns_tablet",
+      "label": "Columns (tablet)",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns (mobile)",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f2f2f2"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "presets": [{ "name": "XI Product Grid" }]
+}
+{% endschema %}

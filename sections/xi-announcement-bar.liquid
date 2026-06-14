@@ -1,0 +1,65 @@
+{% if section.settings.enable %}
+<div
+  class="xi-announcement xi-announcement-bar"
+  style="
+    --xi-announcement-bg: {{ section.settings.background_color }};
+    --xi-announcement-text: {{ section.settings.text_color }};
+  "
+  {{ section.shopify_attributes }}
+>
+  {% if section.settings.link != blank %}
+    <a class="xi-announcement__link" href="{{ section.settings.link }}">
+      <p class="xi-announcement__text">{{ section.settings.text | escape }}</p>
+    </a>
+  {% else %}
+    <p class="xi-announcement__text">{{ section.settings.text | escape }}</p>
+  {% endif %}
+</div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "XI Announcement bar",
+  "tag": "section",
+  "class": "xi-announcement-bar-section",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable",
+      "label": "Enable announcement bar",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Announcement text",
+      "default": "Free shipping on orders over $150"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Announcement link"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "XI Announcement bar"
+    }
+  ]
+}
+{% endschema %}

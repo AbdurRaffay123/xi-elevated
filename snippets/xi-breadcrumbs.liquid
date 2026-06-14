@@ -1,0 +1,79 @@
+{%- doc -%}
+  Uppercase slash-separated breadcrumb trail for product and collection pages.
+
+  @param {object} [product] - Product object for PDP context
+  @param {object} [collection] - Parent collection. Falls back to product.collections.first
+  @param {string} [class] - Additional CSS classes
+{%- enddoc -%}
+
+{% liquid
+  assign xi_crumb_collection = collection
+  if xi_crumb_collection == blank and product != blank
+    assign xi_crumb_collection = product.collections.first
+  endif
+
+  assign xi_breadcrumb_classes = 'xi-breadcrumbs'
+  if class != blank
+    assign xi_breadcrumb_classes = xi_breadcrumb_classes | append: ' ' | append: class
+  endif
+%}
+
+{% if product != blank or xi_crumb_collection != blank %}
+  <nav class="{{ xi_breadcrumb_classes }}" aria-label="Breadcrumb">
+    <ol class="xi-breadcrumbs__list" itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li
+        class="xi-breadcrumbs__item"
+        itemprop="itemListElement"
+        itemscope
+        itemtype="https://schema.org/ListItem"
+      >
+        <a class="xi-breadcrumbs__link" href="{{ routes.root_url }}" itemprop="item">
+          <span itemprop="name">Home</span>
+        </a>
+        <meta itemprop="position" content="1">
+      </li>
+
+      {% if xi_crumb_collection != blank %}
+        <li
+          class="xi-breadcrumbs__item"
+          itemprop="itemListElement"
+          itemscope
+          itemtype="https://schema.org/ListItem"
+        >
+          <a class="xi-breadcrumbs__link" href="{{ xi_crumb_collection.url }}" itemprop="item">
+            <span itemprop="name">{{ xi_crumb_collection.title | escape }}</span>
+          </a>
+          <meta itemprop="position" content="2">
+        </li>
+      {% endif %}
+
+      {% if product != blank %}
+        <li
+          class="xi-breadcrumbs__item"
+          itemprop="itemListElement"
+          itemscope
+          itemtype="https://schema.org/ListItem"
+        >
+          <span class="xi-breadcrumbs__current" itemprop="name" aria-current="page">
+            {{ product.title | escape }}
+          </span>
+          <meta itemprop="item" content="{{ shop.url }}{{ product.url }}">
+          <meta itemprop="position" content="{% if xi_crumb_collection != blank %}3{% else %}2{% endif %}">
+        </li>
+      {% elsif xi_crumb_collection != blank %}
+        <li
+          class="xi-breadcrumbs__item"
+          itemprop="itemListElement"
+          itemscope
+          itemtype="https://schema.org/ListItem"
+        >
+          <span class="xi-breadcrumbs__current" itemprop="name" aria-current="page">
+            {{ xi_crumb_collection.title | escape }}
+          </span>
+          <meta itemprop="item" content="{{ shop.url }}{{ xi_crumb_collection.url }}">
+          <meta itemprop="position" content="2">
+        </li>
+      {% endif %}
+    </ol>
+  </nav>
+{% endif %}

@@ -1,0 +1,252 @@
+{%- comment -%}
+  XI Community Gallery — UGC lifestyle grid + reviews bar.
+  Centered heading, square image row, rating strip below.
+{%- endcomment -%}
+
+{%- liquid
+  assign show_rating = section.settings.show_rating_bar
+  assign image_widths = '400, 600, 800, 1000, 1200'
+  assign onboarding_placeholders = 'lifestyle-1,lifestyle-2,lifestyle-1,lifestyle-2,lifestyle-1' | split: ','
+-%}
+
+<div
+  class="xi-community"
+  data-xi-community="{{ section.id }}"
+  style="
+    --xi-community-bg: {{ section.settings.background_color }};
+    --xi-community-pad-top: {{ section.settings.padding_top }}px;
+    --xi-community-pad-bottom: {{ section.settings.padding_bottom }}px;
+    --xi-community-rating-bg: {{ section.settings.rating_background_color }};
+    --xi-community-columns: {{ section.settings.columns_desktop }};
+  "
+  {{ section.shopify_attributes }}
+>
+  <div class="xi-community__inner xi-container xi-container--wide">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="xi-community__heading xi-type-product-title">
+        {{ section.settings.heading | escape }}
+      </h2>
+    {%- endif -%}
+
+    <div class="xi-community__gallery">
+      <div class="xi-community__track" data-xi-community-track tabindex="0">
+        <ul class="xi-community__grid" role="list">
+          {%- if section.blocks.size > 0 -%}
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'image' -%}
+                <li class="xi-community__item" {{ block.shopify_attributes }}>
+                  {%- liquid
+                    assign community_image_alt = block.settings.alt
+                    if community_image_alt == blank and block.settings.image != blank
+                      assign community_image_alt = block.settings.image.alt
+                    endif
+                    if community_image_alt == blank
+                      assign community_image_alt = 'Community photo'
+                    endif
+                  -%}
+                  {%- if block.settings.link != blank -%}
+                    <a class="xi-community__media" href="{{ block.settings.link }}" aria-label="{{ community_image_alt | escape }}">
+                  {%- else -%}
+                    <div class="xi-community__media">
+                  {%- endif -%}
+
+                    {%- if block.settings.image != blank -%}
+                      {{
+                        block.settings.image
+                        | image_url: width: 1200
+                        | image_tag:
+                          widths: image_widths,
+                          sizes: '(min-width: 990px) 20vw, (min-width: 750px) 25vw, 45vw',
+                          loading: 'lazy',
+                          decoding: 'async',
+                          alt: community_image_alt,
+                          class: 'xi-community__image'
+                      }}
+                    {%- else -%}
+                      {%- assign community_ph_id = forloop.index0 | plus: 230 -%}
+                      <img
+                        class="xi-community__image"
+                        src="https://picsum.photos/seed/xi{{ community_ph_id }}/600/600?grayscale"
+                        width="600"
+                        height="600"
+                        alt="{{ community_image_alt | escape }}"
+                        loading="lazy"
+                        decoding="async"
+                      >
+                    {%- endif -%}
+
+                  {%- if block.settings.link != blank -%}
+                    </a>
+                  {%- else -%}
+                    </div>
+                  {%- endif -%}
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- else -%}
+            {%- for placeholder_name in onboarding_placeholders -%}
+              {%- assign community_ph_id = forloop.index0 | plus: 230 -%}
+              <li class="xi-community__item">
+                <div class="xi-community__media">
+                  <img
+                    class="xi-community__image"
+                    src="https://picsum.photos/seed/xi{{ community_ph_id }}/600/600?grayscale"
+                    width="600"
+                    height="600"
+                    alt="Community photo"
+                    loading="lazy"
+                    decoding="async"
+                  >
+                </div>
+              </li>
+            {%- endfor -%}
+          {%- endif -%}
+        </ul>
+      </div>
+
+      <button
+        type="button"
+        class="xi-community__arrow"
+        data-xi-community-arrow
+        aria-label="Next"
+      >
+        {%- render 'xi-icons', icon: 'chevron-right', size: 'sm', stroke_width: 1.5 -%}
+      </button>
+    </div>
+
+    {%- if show_rating -%}
+      <div class="xi-community__rating-bar">
+        <div class="xi-community__rating">
+          <span class="xi-community__stars" aria-hidden="true">
+            {%- for i in (1..5) -%}
+            {%- render 'xi-icons', icon: 'star', size: 'md' -%}
+            {%- endfor -%}
+          </span>
+          {%- if section.settings.rating_text != blank -%}
+            <span class="xi-community__rating-text">{{ section.settings.rating_text | escape }}</span>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "XI Community Gallery",
+  "tag": "section",
+  "class": "xi-home__section-slot xi-home__section-slot--community-gallery",
+  "enabled_on": {
+    "templates": ["index"]
+  },
+  "max_blocks": 10,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Loved by our community"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Images per row (desktop)",
+      "min": 3,
+      "max": 6,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Rating bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating_bar",
+      "label": "Show rating bar",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "rating_text",
+      "label": "Rating text",
+      "default": "4.9 / 5 from 850+ reviews"
+    },
+    {
+      "type": "color",
+      "id": "rating_background_color",
+      "label": "Rating bar background",
+      "default": "#f2f2f2"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 24,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 24,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "alt",
+          "label": "Image alt text"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link (optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "XI Community Gallery",
+      "blocks": [
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" }
+      ]
+    }
+  ]
+}
+{% endschema %}

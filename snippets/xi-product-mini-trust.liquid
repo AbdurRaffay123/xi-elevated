@@ -1,0 +1,36 @@
+{%- doc -%}
+  PDP mini trust row — icon + two-line label per column.
+
+  @param {string} [shipping_title] - Bold line for shipping badge
+  @param {string} [shipping_sub] - Subline for shipping badge
+  @param {string} [secure_title] - Bold line for secure checkout badge
+  @param {string} [secure_sub] - Subline for secure checkout badge
+{%- enddoc -%}
+
+{% liquid
+  assign xi_shipping_title = shipping_title | default: 'Free shipping'
+  assign xi_shipping_sub = shipping_sub | default: 'On orders over $150'
+  assign xi_secure_title = secure_title | default: 'Secure checkout'
+  assign xi_secure_sub = secure_sub | default: 'Safe & encrypted'
+%}
+
+<ul class="xi-product__mini-trust" role="list">
+  <li class="xi-product__mini-trust-item">
+    <span class="xi-product__mini-trust-icon" aria-hidden="true">
+      {% render 'xi-icons', icon: 'truck', size: 'sm' %}
+    </span>
+    <span class="xi-product__mini-trust-copy">
+      <span class="xi-product__mini-trust-title">{{ xi_shipping_title | escape }}</span>
+      <span class="xi-product__mini-trust-sub">{{ xi_shipping_sub | escape }}</span>
+    </span>
+  </li>
+  <li class="xi-product__mini-trust-item">
+    <span class="xi-product__mini-trust-icon" aria-hidden="true">
+      {% render 'xi-icons', icon: 'lock', size: 'sm' %}
+    </span>
+    <span class="xi-product__mini-trust-copy">
+      <span class="xi-product__mini-trust-title">{{ xi_secure_title | escape }}</span>
+      <span class="xi-product__mini-trust-sub">{{ xi_secure_sub | escape }}</span>
+    </span>
+  </li>
+</ul>

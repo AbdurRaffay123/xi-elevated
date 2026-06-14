@@ -1,0 +1,432 @@
+<script src="{{ 'cart-icon.js' | asset_url }}" type="module" fetchpriority="low"></script>
+<script src="{{ 'xi-header.js' | asset_url }}" defer="defer"></script>
+
+{% if section.settings.show_search %}
+  {% render 'predictive-search-styles' %}
+{% endif %}
+
+{% liquid
+  assign xi_transparent = false
+  if section.settings.enable_transparent_header_home and template.name == 'index'
+    assign xi_transparent = true
+  elsif section.settings.enable_transparent_header_collection and template.name == 'collection'
+    assign xi_transparent = true
+  elsif section.settings.enable_transparent_header_product and template.name == 'product'
+    assign xi_transparent = true
+  endif
+
+  assign drawer_menu = linklists[section.settings.shop_menu]
+%}
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": {{ shop.name | json }},
+    {% if section.settings.logo_image %}
+      "logo": {{ section.settings.logo_image | image_url: width: 500 | prepend: "https:" | json }},
+    {% elsif settings.logo %}
+      "logo": {{ settings.logo | image_url: width: 500 | prepend: "https:" | json }},
+    {% endif %}
+    "url": {{ request.origin | json }}
+  }
+</script>
+
+<xi-header-component
+  id="xi-header-component"
+  class="xi-header xi-header-section{% if section.settings.enable_sticky_header %} xi-header--sticky{% endif %}{% if xi_transparent %} xi-header--transparent-mode{% else %} xi-header--solid{% endif %}"
+  data-transparent="{{ xi_transparent }}"
+  data-scroll-offset="{{ section.settings.scroll_offset }}"
+  style="
+    --xi-drawer-width: {{ section.settings.drawer_width }}px;
+    --xi-drawer-duration: {{ section.settings.drawer_animation_duration }}ms;
+    --xi-header-bg-scrolled: {{ section.settings.scrolled_background_color }};
+    --xi-header-tone-transparent: {{ section.settings.transparent_icon_color }};
+    --xi-header-tone-scrolled: {{ section.settings.scrolled_icon_color }};
+  "
+  {{ section.shopify_attributes }}
+>
+  <div class="xi-header__bar xi-container xi-container--wide">
+    <div class="xi-header__zone xi-header__zone--left">
+      <button
+        type="button"
+        class="xi-header__action xi-header__menu-trigger"
+        data-xi-drawer-open
+        aria-haspopup="dialog"
+        aria-controls="xi-nav-drawer"
+        aria-expanded="false"
+        aria-label="{{ section.settings.menu_open_label | escape }}"
+      >
+        {% render 'xi-icons', icon: 'hamburger', size: 'md' %}
+      </button>
+    </div>
+
+    <div class="xi-header__zone xi-header__zone--center">
+      {% render 'xi-logo',
+        variant: 'header',
+        color_mode: 'light',
+        logo_image: section.settings.logo_image,
+        width: section.settings.logo_width,
+        class: 'xi-header__logo'
+      %}
+    </div>
+
+    <div class="xi-header__zone xi-header__zone--right">
+      {% if section.settings.show_search %}
+        <search-button class="xi-header__action-wrap">
+          <button
+            type="button"
+            class="xi-header__action"
+            on:click="#search-modal/showDialog"
+            aria-label="{{ 'content.search_input_label' | t }}"
+            aria-haspopup="dialog"
+          >
+            {% render 'xi-icons', icon: 'search', size: 'md' %}
+          </button>
+        </search-button>
+      {% endif %}
+
+      {% if section.settings.show_account and shop.customer_accounts_enabled %}
+        <div class="xi-header__action-wrap xi-header__account">
+          <shopify-account menu="{{ section.settings.customer_account_menu }}">
+            <span slot="signed-out-avatar" class="xi-header__action xi-header__account-trigger">
+              {% render 'xi-icons', icon: 'account', size: 'md' %}
+            </span>
+            {% if customer %}
+              <div class="account-button__fallback"></div>
+            {% endif %}
+          </shopify-account>
+        </div>
+      {% endif %}
+
+      {% if section.settings.show_cart %}
+        {% if settings.cart_type == 'drawer' and template.name != 'cart' %}
+          <script src="{{ 'cart-drawer.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+          {% capture xi_empty_cart_drawer %}
+            <div class="cart-drawer__header">
+              <button
+                ref="closeButton"
+                on:click="cart-drawer-component/close"
+                class="button close-button cart-drawer__close-button button-unstyled"
+                aria-label="{{ 'actions.close_dialog' | t }}"
+              >
+                <span class="svg-wrapper">{{ 'icon-close.svg' | inline_asset_content }}</span>
+              </button>
+            </div>
+            <div class="cart-drawer__content" aria-label="{{ 'accessibility.cart' | t }}">
+              <h2 class="cart-drawer__heading h4 cart-drawer__heading--empty" id="cart-drawer-heading-empty">
+                {{ 'content.your_cart_is_empty' | t }}
+              </h2>
+              <div class="cart-drawer__items">
+                {% render 'cart-products', force_empty: true %}
+              </div>
+            </div>
+          {% endcapture %}
+
+          <cart-drawer-component class="xi-header__cart-drawer">
+            <template id="empty-cart-template">{{ xi_empty_cart_drawer }}</template>
+            <button
+              type="button"
+              class="xi-header__action xi-header__cart-trigger"
+              on:click="/open"
+              aria-haspopup="dialog"
+              aria-label="{{ 'accessibility.cart' | t }}"
+              aria-describedby="cart-bubble-text"
+              data-testid="cart-drawer-trigger"
+            >
+              <cart-icon class="xi-header__cart-icon{% unless cart == empty %} xi-header__cart-icon--has-items{% endunless %}" data-testid="cart-icon">
+                {% render 'xi-icons', icon: 'cart', size: 'md' %}
+                {% render 'cart-bubble', limit: 100 %}
+              </cart-icon>
+            </button>
+            <dialog
+              ref="dialog"
+              class="cart-drawer__dialog dialog-modal dialog-drawer color-{{ settings.drawer_color_scheme }}{% if cart.empty? %} cart-drawer--empty{% endif %}"
+              data-testid="cart-drawer-dialog"
+              aria-labelledby="{% if cart.empty? %}cart-drawer-heading-empty{% else %}cart-drawer-heading{% endif %}"
+              scroll-lock
+              cart-summary-sticky="true"
+            >
+              <span ref="liveRegion" class="visually-hidden" role="status"></span>
+              <div class="cart-drawer__inner" data-hydration-key="cart-drawer-inner">
+                {% capture xi_cart_children %}
+                  {%- if cart.empty? -%}
+                    {{ xi_empty_cart_drawer }}
+                  {%- else -%}
+                    <div class="cart-drawer__header" id="cart-drawer-header">
+                      <h2 class="cart-drawer__heading h4" id="cart-drawer-heading">
+                        {{ 'content.cart_title' | t }}
+                        {% render 'cart-bubble' %}
+                      </h2>
+                      <button
+                        ref="closeButton"
+                        on:click="cart-drawer-component/close"
+                        class="button close-button cart-drawer__close-button button-unstyled"
+                        aria-label="{{ 'actions.close_dialog' | t }}"
+                      >
+                        <span class="svg-wrapper">{{ 'icon-close.svg' | inline_asset_content }}</span>
+                      </button>
+                    </div>
+                    <scroll-hint class="cart-drawer__content" aria-label="{{ 'accessibility.cart' | t }}">
+                      <scroll-hint class="cart-drawer__items">
+                        {% render 'cart-products' %}
+                      </scroll-hint>
+                      <div class="cart-drawer__summary">
+                        {% render 'cart-summary', section_id: section.id %}
+                      </div>
+                    </scroll-hint>
+                  {%- endif -%}
+                {% endcapture %}
+                {% render 'cart-items-component', children: xi_cart_children, is_drawer: true, section_id: section.id %}
+              </div>
+            </dialog>
+          </cart-drawer-component>
+        {% else %}
+          <a
+            href="{{ routes.cart_url }}"
+            class="xi-header__action xi-header__cart-link"
+            aria-label="{{ 'accessibility.cart' | t }}"
+            aria-describedby="cart-bubble-text"
+          >
+            <cart-icon class="xi-header__cart-icon{% unless cart == empty %} xi-header__cart-icon--has-items{% endunless %}">
+              {% render 'xi-icons', icon: 'cart', size: 'md' %}
+              {% render 'cart-bubble', limit: 100 %}
+            </cart-icon>
+          </a>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</xi-header-component>
+
+<xi-drawer
+  id="xi-nav-drawer"
+  class="xi-drawer"
+  role="dialog"
+  aria-modal="true"
+  aria-label="{{ section.settings.drawer_label | escape }}"
+>
+  <div class="xi-drawer__overlay" data-xi-drawer-overlay></div>
+  <div
+    class="xi-drawer__panel"
+    data-xi-drawer-panel
+    tabindex="-1"
+  >
+    <div class="xi-drawer__header">
+      {% render 'xi-logo', variant: 'header', color_mode: 'light', link: true, width: section.settings.logo_width %}
+      <button
+        type="button"
+        class="xi-header__action xi-drawer__close"
+        data-xi-drawer-close
+        aria-label="{{ section.settings.menu_close_label | escape }}"
+      >
+        {% render 'xi-icons', icon: 'close', size: 'md' %}
+      </button>
+    </div>
+
+    <nav class="xi-drawer__nav" aria-label="{{ section.settings.drawer_label | escape }}">
+      <ul class="xi-drawer__list">
+        {%- assign drawer_titles = 'Home|Catalog|Contact' | split: '|' -%}
+        {%- for drawer_title in drawer_titles -%}
+          {%- liquid
+            assign drawer_title_key = drawer_title | downcase
+            assign drawer_url = blank
+
+            for link in drawer_menu.links
+              assign link_key = link.title | downcase
+              if link_key == drawer_title_key
+                assign drawer_url = link.url
+                break
+              endif
+            endfor
+
+            if drawer_url == blank
+              case drawer_title_key
+                when 'home'
+                  assign drawer_url = routes.root_url
+                when 'catalog'
+                  assign drawer_url = routes.all_products_collection_url
+                when 'contact'
+                  assign drawer_url = '/pages/contact'
+              endcase
+            endif
+          -%}
+          <li class="xi-drawer__item">
+            <a class="xi-drawer__link" href="{{ drawer_url }}">{{ drawer_title | escape }}</a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+  </div>
+</xi-drawer>
+
+{% schema %}
+{
+  "name": "XI Header",
+  "tag": "section",
+  "class": "xi-header-section-wrapper",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_image",
+      "label": "Logo image",
+      "info": "Optional. Uses typography fallback when empty."
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo width",
+      "min": 60,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "header",
+      "content": "Layout & behavior"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky_header",
+      "label": "Enable sticky header",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_transparent_header_home",
+      "label": "Transparent header on homepage",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_transparent_header_collection",
+      "label": "Transparent header on collection pages",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_transparent_header_product",
+      "label": "Transparent header on product pages",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "scroll_offset",
+      "label": "Scroll distance before solid header",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "scrolled_background_color",
+      "label": "Scrolled header background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "transparent_icon_color",
+      "label": "Transparent header icon color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "scrolled_icon_color",
+      "label": "Scrolled header icon color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Navigation drawer"
+    },
+    {
+      "type": "text",
+      "id": "drawer_label",
+      "label": "Drawer accessibility label",
+      "default": "Site navigation"
+    },
+    {
+      "type": "text",
+      "id": "menu_open_label",
+      "label": "Menu open button label",
+      "default": "Open menu"
+    },
+    {
+      "type": "text",
+      "id": "menu_close_label",
+      "label": "Menu close button label",
+      "default": "Close menu"
+    },
+    {
+      "type": "link_list",
+      "id": "shop_menu",
+      "label": "Drawer menu",
+      "info": "Only Home, Catalog, and Contact links are shown.",
+      "default": "main-menu"
+    },
+    {
+      "type": "range",
+      "id": "drawer_width",
+      "label": "Drawer width",
+      "min": 280,
+      "max": 480,
+      "step": 10,
+      "unit": "px",
+      "default": 360
+    },
+    {
+      "type": "range",
+      "id": "drawer_animation_duration",
+      "label": "Drawer animation duration",
+      "min": 200,
+      "max": 800,
+      "step": 50,
+      "unit": "ms",
+      "default": 400
+    },
+    {
+      "type": "header",
+      "content": "Header actions"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show search",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "Show account",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cart",
+      "label": "Show cart",
+      "default": true
+    },
+    {
+      "type": "link_list",
+      "id": "customer_account_menu",
+      "label": "Customer account menu"
+    }
+  ],
+  "presets": [
+    {
+      "name": "XI Header"
+    }
+  ]
+}
+{% endschema %}

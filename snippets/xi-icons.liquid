@@ -1,0 +1,124 @@
+{%- doc -%}
+  Single source of truth for XI Elevated inline SVG icons.
+
+  @param {string} icon - Icon name: hamburger, search, account, cart, truck, lock, star, star-outline, ruler, pocket, fabric, tag, embroidery, hood, hem, limited, chevron, arrow, close
+  @param {string} [size] - 'sm', 'md' (default), or 'lg'
+  @param {string} [class] - Additional CSS classes
+  @param {number} [stroke_width] - SVG stroke width. Default: 1.5
+  @param {string} [label] - Accessible label. Icons are decorative by default (aria-hidden)
+{%- enddoc -%}
+
+{% liquid
+  assign xi_icon_name = icon | default: 'search'
+  assign xi_icon_size = size | default: 'md'
+  assign xi_icon_stroke = stroke_width | default: 1.5
+
+  assign xi_icon_classes = 'xi-icon'
+  if xi_icon_size == 'sm'
+    assign xi_icon_classes = xi_icon_classes | append: ' xi-icon--sm'
+  elsif xi_icon_size == 'lg'
+    assign xi_icon_classes = xi_icon_classes | append: ' xi-icon--lg'
+  endif
+
+  if icon == 'star'
+    assign xi_icon_classes = xi_icon_classes | append: ' xi-icon--fill'
+  endif
+
+  if class != blank
+    assign xi_icon_classes = xi_icon_classes | append: ' ' | append: class
+  endif
+%}
+
+<span
+  class="{{ xi_icon_classes }}"
+  style="--xi-icon-stroke: {{ xi_icon_stroke }};"
+  {% if label != blank %}
+    role="img"
+    aria-label="{{ label | escape }}"
+  {% else %}
+    aria-hidden="true"
+  {% endif %}
+>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false">
+    {%- case xi_icon_name -%}
+      {%- when 'hamburger' -%}
+        <path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round" />
+      {%- when 'search' -%}
+        <circle cx="11" cy="11" r="6.25" />
+        <path d="M16.2 16.2 20 20" stroke-linecap="round" />
+      {%- when 'account' -%}
+        <circle cx="12" cy="8.25" r="3" />
+        <path d="M6.5 19.5c0-3.038 2.462-5.5 5.5-5.5s5.5 2.462 5.5 5.5" stroke-linecap="round" />
+      {%- when 'cart' -%}
+        <path d="M7.25 8h12.25l-1.15 6.9H8.4L7.25 8Z" stroke-linejoin="round" />
+        <path d="M9.25 8V6.75a2.75 2.75 0 0 1 5.5 0V8" stroke-linecap="round" />
+      {%- when 'truck' -%}
+        <path d="M3.5 8h10.5v7.5H3.5V8Z" stroke-linejoin="round" />
+        <path d="M14 10.5h3.25L19.5 13.75V15.5h-5.5" stroke-linejoin="round" />
+        <circle cx="7.25" cy="16.75" r="1.35" />
+        <circle cx="16.75" cy="16.75" r="1.35" />
+      {%- when 'lock' -%}
+        <rect x="7" y="11" width="10" height="7.5" rx="0.75" />
+        <path d="M9.5 11V8.75a2.75 2.75 0 0 1 5.5 0V11" stroke-linecap="round" />
+      {%- when 'star' -%}
+        <path d="M12 4.25 13.9 9.1h5.05l-4.1 2.95 1.55 4.95L12 15.6 7.6 16.95l1.55-4.95-4.1-2.95h5.05L12 4.25Z" />
+      {%- when 'star-outline' -%}
+        <path d="M12 4.25 13.9 9.1h5.05l-4.1 2.95 1.55 4.95L12 15.6 7.6 16.95l1.55-4.95-4.1-2.95h5.05L12 4.25Z" stroke-linejoin="round" />
+      {%- when 'ruler' -%}
+        <path d="M5.5 16.5 16.5 5.5" stroke-linecap="round" />
+        <path d="M8 14.1 9.15 12.95M10.55 11.55 11.7 10.4M13.1 9.05 14.25 7.9" stroke-linecap="round" />
+      {%- when 'chevron' -%}
+        <path d="M8 10l4 4 4-4" stroke-linecap="round" stroke-linejoin="round" />
+      {%- when 'chevron-left' -%}
+        <path d="M14 8l-4 4 4 4" stroke-linecap="round" stroke-linejoin="round" />
+      {%- when 'chevron-right' -%}
+        <path d="M10 8l4 4-4 4" stroke-linecap="round" stroke-linejoin="round" />
+      {%- when 'arrow' -%}
+        <path d="M5 12h12.5M13.5 8.5 17 12l-3.5 3.5" stroke-linecap="round" stroke-linejoin="round" />
+      {%- when 'close' -%}
+        <path d="M7 7l10 10M17 7 7 17" stroke-linecap="round" />
+      {%- when 'pocket' -%}
+        <path d="M8 7h8a1.5 1.5 0 0 1 1.5 1.5v9.5a1 1 0 0 1-1 1H8.5a1 1 0 0 1-1-1V8.5A1.5 1.5 0 0 1 8 7Z" stroke-linejoin="round" />
+        <path d="M8 10h10" stroke-linecap="round" />
+        <path d="M15.5 12.5v4" stroke-linecap="round" />
+        <path d="M15.5 12.5h2.5a.75.75 0 0 1 .75.75v2.75" stroke-linecap="round" stroke-linejoin="round" />
+      {%- when 'fabric' -%}
+        <path d="M12 5 17 7.75v8.5L12 19.25 7 16.25V7.75L12 5Z" stroke-linejoin="round" />
+        <path d="M12 8.5v7" stroke-linecap="round" />
+        <path d="M9.25 10.5 12 12l2.75-1.5" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M9.25 14 12 15.5l2.75-1.5" stroke-linecap="round" stroke-linejoin="round" />
+      {%- when 'tag' -%}
+        <path d="M9 6h5.75L17 8.25v9.25H8.25V8.25L9 6Z" stroke-linejoin="round" />
+        <path d="M13.25 6v2.75H16" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M11.5 12.75 12.25 13.5l1.5-1.5" stroke-linecap="round" stroke-linejoin="round" />
+      {%- when 'embroidery' -%}
+        <path d="M14.75 5.75 18.5 9.5" stroke-linecap="round" />
+        <circle cx="18.75" cy="9.75" r="1.1" />
+        <path d="M14.75 5.75 7.5 13" stroke-linecap="round" />
+        <path d="M7.5 13v4.5" stroke-linecap="round" />
+        <path d="M6 17.5h3" stroke-linecap="round" />
+        <path d="M9.5 15.75 7.5 17.5" stroke-linecap="round" />
+      {%- when 'hood' -%}
+        <path d="M8 17V12" stroke-linecap="round" />
+        <path d="M16 17V12" stroke-linecap="round" />
+        <path d="M8 12h8" stroke-linecap="round" />
+        <path d="M8 12c0-5 8-5 8 0" stroke-linecap="round" />
+        <path d="M8 17h8" stroke-linecap="round" />
+      {%- when 'hem' -%}
+        <path d="M9 7.5h6" stroke-linecap="round" />
+        <path d="M9 7.5 7.75 10v9" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M15 7.5l1.25 2.5v9" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M7.75 19h8.5" stroke-linecap="round" />
+        <path d="M9.5 19V14" stroke-linecap="round" />
+        <path d="M14.5 19V14" stroke-linecap="round" />
+        <path d="M9.5 14h5" stroke-linecap="round" />
+      {%- when 'limited' -%}
+        <circle cx="12" cy="12" r="6.25" />
+        <path d="M12 8.75v6.5" stroke-linecap="round" />
+        <path d="M9.75 12h4.5" stroke-linecap="round" />
+        <path d="M9.25 9.75 12 11.5l2.75-1.75" stroke-linecap="round" stroke-linejoin="round" />
+      {%- else -%}
+        <circle cx="12" cy="12" r="7.5" />
+    {%- endcase -%}
+  </svg>
+</span>

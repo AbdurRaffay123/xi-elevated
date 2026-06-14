@@ -1,0 +1,268 @@
+{%- comment -%}
+  XI Brand Story — full-bleed lifestyle image with left editorial copy.
+  Headline, subheadline, and ghost CTA over a darkened background.
+{%- endcomment -%}
+
+{%- liquid
+  assign img_desktop = section.settings.image_desktop
+  assign img_mobile = section.settings.image_mobile
+  assign overlay_enabled = section.settings.enable_image_overlay
+  assign overlay_alpha = section.settings.overlay_opacity | divided_by: 100.0
+
+  assign focal_desktop = '50% 50%'
+  if img_desktop != blank and img_desktop.presentation.focal_point != blank
+    assign focal_desktop = img_desktop.presentation.focal_point
+  endif
+
+  assign focal_mobile = focal_desktop
+  if img_mobile != blank and img_mobile.presentation.focal_point != blank
+    assign focal_mobile = img_mobile.presentation.focal_point
+  endif
+
+  assign desktop_widths = '832, 1100, 1400, 1700, 2000, 2560, 3840'
+  assign mobile_widths = '500, 700, 900, 1200, 1600'
+-%}
+
+<div
+  class="xi-brand-story{% if overlay_enabled %} xi-brand-story--overlay{% endif %}"
+  style="
+    --xi-brand-story-height: {{ section.settings.section_height }};
+    --xi-brand-story-height-mobile: {{ section.settings.section_height_mobile }};
+    --xi-brand-story-content-max: {{ section.settings.content_max_width }}px;
+    --xi-brand-story-overlay: {{ overlay_alpha }};
+    --xi-brand-story-pad-top: {{ section.settings.padding_top }}px;
+    --xi-brand-story-pad-bottom: {{ section.settings.padding_bottom }}px;
+    --xi-brand-story-focal-desktop: {{ focal_desktop }};
+    --xi-brand-story-focal-mobile: {{ focal_mobile }};
+  "
+  {{ section.shopify_attributes }}
+>
+  <div class="xi-brand-story__media" aria-hidden="true">
+    {%- if img_desktop != blank -%}
+      <picture class="xi-brand-story__picture">
+        {%- if img_mobile != blank -%}
+          <source
+            media="(max-width: 749px)"
+            srcset="
+              {%- for w in mobile_widths -%}
+                {{ img_mobile | image_url: width: w }} {{ w }}w{%- unless forloop.last -%},{%- endunless -%}
+              {%- endfor -%}
+            "
+            sizes="100vw"
+            width="{{ img_mobile.width }}"
+            height="{{ img_mobile.height }}"
+          >
+        {%- endif -%}
+        {{
+          img_desktop
+          | image_url: width: 3840
+          | image_tag:
+            width: img_desktop.width,
+            height: img_desktop.height,
+            widths: desktop_widths,
+            sizes: '100vw',
+            alt: '',
+            class: 'xi-brand-story__image',
+            loading: 'lazy',
+            decoding: 'async'
+        }}
+      </picture>
+    {%- else -%}
+      <img
+        class="xi-brand-story__image"
+        src="https://picsum.photos/seed/xibrand/1800/1200?grayscale"
+        width="1800"
+        height="1200"
+        alt=""
+        loading="lazy"
+        decoding="async"
+      >
+    {%- endif -%}
+  </div>
+
+  {%- if overlay_enabled -%}
+    <div class="xi-brand-story__overlay" aria-hidden="true"></div>
+  {%- endif -%}
+
+  <div class="xi-brand-story__inner xi-container xi-container--wide">
+    <div class="xi-brand-story__content">
+      {%- if section.settings.heading != blank -%}
+        {%- assign xi_brand_heading_lines = section.settings.heading | strip | split: '
+' -%}
+        <h2 class="xi-brand-story__heading">
+          {%- for line in xi_brand_heading_lines -%}
+            {%- assign xi_brand_line = line | strip -%}
+            {%- if xi_brand_line != blank -%}
+              <span class="xi-brand-story__heading-line">{{ xi_brand_line | escape }}</span>
+            {%- endif -%}
+          {%- endfor -%}
+        </h2>
+      {%- endif -%}
+
+      {%- if section.settings.subheading != blank -%}
+        {%- assign xi_brand_subheading_lines = section.settings.subheading | strip | split: '
+' -%}
+        <p class="xi-brand-story__subheading">
+          {%- for line in xi_brand_subheading_lines -%}
+            {%- assign xi_brand_sub_line = line | strip -%}
+            {%- if xi_brand_sub_line != blank -%}
+              <span class="xi-brand-story__subheading-line">{{ xi_brand_sub_line | escape }}</span>
+            {%- endif -%}
+          {%- endfor -%}
+        </p>
+      {%- endif -%}
+
+      {%- if section.settings.button_label != blank -%}
+        <div class="xi-brand-story__actions">
+          <a
+            class="xi-btn xi-btn--ghost xi-brand-story__cta"
+            {% if section.settings.button_link != blank %}
+              href="{{ section.settings.button_link }}"
+            {% else %}
+              href="{{ routes.all_products_collection_url }}"
+            {% endif %}
+          >
+            {{ section.settings.button_label | escape }}
+          </a>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "XI Brand Story",
+  "tag": "section",
+  "class": "xi-home__section-slot xi-home__section-slot--brand-story",
+  "enabled_on": {
+    "templates": ["index"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_desktop",
+      "label": "Desktop image",
+      "info": "Full-section background. Set focal point in the image editor."
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile image",
+      "info": "Optional mobile crop. Falls back to desktop image."
+    },
+    {
+      "type": "select",
+      "id": "section_height",
+      "label": "Section height (desktop)",
+      "options": [
+        { "value": "100svh", "label": "Full screen" },
+        { "value": "85svh", "label": "Tall" },
+        { "value": "75svh", "label": "Medium tall" },
+        { "value": "70svh", "label": "Medium" },
+        { "value": "60svh", "label": "Compact" }
+      ],
+      "default": "75svh"
+    },
+    {
+      "type": "select",
+      "id": "section_height_mobile",
+      "label": "Section height (mobile)",
+      "options": [
+        { "value": "85svh", "label": "Tall" },
+        { "value": "70svh", "label": "Medium" },
+        { "value": "60svh", "label": "Compact" }
+      ],
+      "default": "70svh"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_image_overlay",
+      "label": "Enable image overlay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 35
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Headline",
+      "default": "For dogs that\nGo everywhere\nwith you.",
+      "info": "One line per row. Renders in uppercase."
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheadline",
+      "default": "Because loyalty\ndeserves the best.",
+      "info": "One line per row. Use two balanced lines for even stacking."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Our story"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "label": "Content max width",
+      "min": 320,
+      "max": 640,
+      "step": 20,
+      "unit": "px",
+      "default": 520
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "XI Brand Story"
+    }
+  ]
+}
+{% endschema %}

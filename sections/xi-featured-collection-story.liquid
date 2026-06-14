@@ -1,0 +1,274 @@
+{%- comment -%}
+  XI Featured Collection Story — full-bleed background image with left editorial copy.
+  Magazine-style collection storytelling. Image fills the section; text overlays left.
+{%- endcomment -%}
+
+{%- liquid
+  assign img_desktop = section.settings.image_desktop
+  assign img_mobile = section.settings.image_mobile
+  assign overlay_enabled = section.settings.enable_image_overlay
+  assign overlay_alpha = section.settings.overlay_opacity | divided_by: 100.0
+
+  assign focal_desktop = '50% 50%'
+  if img_desktop != blank and img_desktop.presentation.focal_point != blank
+    assign focal_desktop = img_desktop.presentation.focal_point
+  endif
+
+  assign focal_mobile = focal_desktop
+  if img_mobile != blank and img_mobile.presentation.focal_point != blank
+    assign focal_mobile = img_mobile.presentation.focal_point
+  endif
+
+  assign desktop_widths = '832, 1100, 1400, 1700, 2000, 2560, 3840'
+  assign mobile_widths = '500, 700, 900, 1200, 1600'
+-%}
+
+<div
+  class="xi-collection-story{% if overlay_enabled %} xi-collection-story--overlay{% endif %}"
+  style="
+    --xi-collection-story-height: {{ section.settings.section_height }};
+    --xi-collection-story-height-mobile: {{ section.settings.section_height_mobile }};
+    --xi-collection-story-content-max: {{ section.settings.content_max_width }}px;
+    --xi-collection-story-overlay: {{ overlay_alpha }};
+    --xi-collection-story-pad-top: {{ section.settings.padding_top }}px;
+    --xi-collection-story-pad-bottom: {{ section.settings.padding_bottom }}px;
+    --xi-collection-story-focal-desktop: {{ focal_desktop }};
+    --xi-collection-story-focal-mobile: {{ focal_mobile }};
+  "
+  {{ section.shopify_attributes }}
+>
+  <div class="xi-collection-story__media" aria-hidden="true">
+    {%- if img_desktop != blank -%}
+      <picture class="xi-collection-story__picture">
+        {%- if img_mobile != blank -%}
+          <source
+            media="(max-width: 749px)"
+            srcset="
+              {%- for w in mobile_widths -%}
+                {{ img_mobile | image_url: width: w }} {{ w }}w{%- unless forloop.last -%},{%- endunless -%}
+              {%- endfor -%}
+            "
+            sizes="100vw"
+            width="{{ img_mobile.width }}"
+            height="{{ img_mobile.height }}"
+          >
+        {%- endif -%}
+        {{
+          img_desktop
+          | image_url: width: 3840
+          | image_tag:
+            width: img_desktop.width,
+            height: img_desktop.height,
+            widths: desktop_widths,
+            sizes: '100vw',
+            alt: '',
+            class: 'xi-collection-story__image',
+            loading: 'lazy',
+            decoding: 'async'
+        }}
+      </picture>
+    {%- else -%}
+      <img
+        class="xi-collection-story__image"
+        src="https://picsum.photos/seed/xistory/1800/1200?grayscale"
+        width="1800"
+        height="1200"
+        alt=""
+        loading="lazy"
+        decoding="async"
+      >
+    {%- endif -%}
+  </div>
+
+  {%- if overlay_enabled -%}
+    <div class="xi-collection-story__overlay" aria-hidden="true"></div>
+  {%- endif -%}
+
+  <div class="xi-collection-story__inner xi-container xi-container--wide">
+    <div class="xi-collection-story__content">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="xi-collection-story__eyebrow xi-type-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h2 class="xi-collection-story__heading xi-type-section">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+
+      {%- if section.settings.body != blank -%}
+        {%- assign xi_collection_body_raw = section.settings.body | strip_html | strip -%}
+
+        {%- if xi_collection_body_raw == 'Premium dogwear designed for everyday adventures.' or xi_collection_body_raw == 'Premium dogwear designed for everyday adventures' -%}
+          {%- assign xi_collection_body_lines = 'Premium dogwear|designed for everyday|adventures' | split: '|' -%}
+        {%- else -%}
+          {%- assign xi_collection_body_lines = xi_collection_body_raw | split: '
+' -%}
+        {%- endif -%}
+
+        <div class="xi-collection-story__body">
+          {%- for line in xi_collection_body_lines -%}
+            {%- assign xi_collection_body_line = line | strip -%}
+            {%- if xi_collection_body_line != blank -%}
+              <span class="xi-collection-story__body-line">{{ xi_collection_body_line | escape }}</span>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.button_label != blank -%}
+        <div class="xi-collection-story__actions">
+          <a
+            class="xi-btn xi-btn--ghost xi-collection-story__cta"
+            {% if section.settings.button_link != blank %}
+              href="{{ section.settings.button_link }}"
+            {% else %}
+              href="{{ routes.all_products_collection_url }}"
+            {% endif %}
+          >
+            {{ section.settings.button_label | escape }}
+          </a>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "XI Collection Story",
+  "tag": "section",
+  "class": "xi-home__section-slot xi-home__section-slot--featured-collection-story",
+  "enabled_on": {
+    "templates": ["index"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_desktop",
+      "label": "Desktop image",
+      "info": "Full-section background. Set focal point in the image editor."
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile image",
+      "info": "Optional mobile crop. Falls back to desktop image."
+    },
+    {
+      "type": "select",
+      "id": "section_height",
+      "label": "Section height (desktop)",
+      "options": [
+        { "value": "100svh", "label": "Full screen" },
+        { "value": "85svh", "label": "Tall" },
+        { "value": "70svh", "label": "Medium" },
+        { "value": "60svh", "label": "Compact" }
+      ],
+      "default": "85svh"
+    },
+    {
+      "type": "select",
+      "id": "section_height_mobile",
+      "label": "Section height (mobile)",
+      "options": [
+        { "value": "85svh", "label": "Tall" },
+        { "value": "70svh", "label": "Medium" },
+        { "value": "60svh", "label": "Compact" }
+      ],
+      "default": "70svh"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_image_overlay",
+      "label": "Enable image overlay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Drop 001"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Headline",
+      "default": "Off Grid Club"
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Supporting copy",
+      "default": "Premium dogwear\ndesigned for everyday\nadventures",
+      "info": "One line per row."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "label": "Content max width",
+      "min": 320,
+      "max": 560,
+      "step": 20,
+      "unit": "px",
+      "default": 440
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "XI Collection Story"
+    }
+  ]
+}
+{% endschema %}

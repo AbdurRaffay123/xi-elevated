@@ -1,0 +1,294 @@
+{%- comment -%}
+  XI Hero — full-bleed editorial hero.
+  Sits behind the announcement bar + transparent header (header overlap).
+  Independent desktop / mobile imagery, alignment, and vertical position.
+{%- endcomment -%}
+
+{%- liquid
+  assign img_desktop = section.settings.image_desktop
+  assign img_mobile = section.settings.image_mobile
+  assign overlap = section.settings.enable_header_overlap
+  assign overlay_alpha = section.settings.overlay_opacity | divided_by: 100.0
+
+  assign focal_desktop = '50% 50%'
+  if img_desktop != blank and img_desktop.presentation.focal_point != blank
+    assign focal_desktop = img_desktop.presentation.focal_point
+  endif
+
+  assign focal_mobile = focal_desktop
+  if img_mobile != blank and img_mobile.presentation.focal_point != blank
+    assign focal_mobile = img_mobile.presentation.focal_point
+  endif
+
+  assign alt_text = img_desktop.alt | default: section.settings.heading | default: shop.name
+
+  assign desktop_widths = '832, 1100, 1400, 1700, 2000, 2560, 3840'
+  assign mobile_widths = '500, 700, 900, 1200, 1600'
+-%}
+
+<div
+  class="xi-hero{% if overlap %} xi-hero--overlap xi-home__pull-under-header{% endif %}"
+  data-xi-hero-overlap="{{ overlap }}"
+  data-align-desktop="{{ section.settings.align_desktop }}"
+  data-align-mobile="{{ section.settings.align_mobile }}"
+  data-vpos-desktop="{{ section.settings.vposition_desktop }}"
+  data-vpos-mobile="{{ section.settings.vposition_mobile }}"
+  style="
+    --xi-hero-height: {{ section.settings.hero_height }};
+    --xi-hero-height-mobile: {{ section.settings.hero_height_mobile }};
+    --xi-hero-overlay: {{ overlay_alpha }};
+    --xi-hero-content-max: {{ section.settings.content_max_width }}px;
+    --xi-hero-focal-desktop: {{ focal_desktop }};
+    --xi-hero-focal-mobile: {{ focal_mobile }};
+  "
+  {{ section.shopify_attributes }}
+>
+  <div class="xi-hero__media">
+    {%- if img_desktop != blank -%}
+      <picture class="xi-hero__picture">
+        {%- if img_mobile != blank -%}
+          <source
+            media="(max-width: 749px)"
+            srcset="
+              {%- for w in mobile_widths -%}
+                {{ img_mobile | image_url: width: w }} {{ w }}w{%- unless forloop.last -%},{%- endunless -%}
+              {%- endfor -%}
+            "
+            sizes="100vw"
+            width="{{ img_mobile.width }}"
+            height="{{ img_mobile.height }}"
+          >
+        {%- endif -%}
+        {{
+          img_desktop
+          | image_url: width: 3840
+          | image_tag:
+            width: img_desktop.width,
+            height: img_desktop.height,
+            widths: desktop_widths,
+            sizes: '100vw',
+            alt: alt_text,
+            class: 'xi-hero__image',
+            loading: 'eager',
+            fetchpriority: 'high',
+            decoding: 'async'
+        }}
+      </picture>
+    {%- else -%}
+      <img
+        class="xi-hero__image"
+        src="https://picsum.photos/seed/xihero/1800/1200?grayscale"
+        width="1800"
+        height="1200"
+        alt="{{ alt_text }}"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+      >
+    {%- endif -%}
+  </div>
+
+  <div class="xi-hero__overlay" aria-hidden="true"></div>
+
+  <div class="xi-hero__inner">
+    <div class="xi-hero__content">
+      {%- if section.settings.heading != blank -%}
+        {%- assign xi_hero_heading_lines = section.settings.heading | strip | split: '
+' -%}
+        <h1 class="xi-hero__heading xi-type-hero">
+          {%- for line in xi_hero_heading_lines -%}
+            {%- assign xi_hero_line = line | strip -%}
+            {%- if xi_hero_line != blank -%}
+              <span class="xi-hero__heading-line">{{ xi_hero_line | escape }}</span>
+            {%- endif -%}
+          {%- endfor -%}
+        </h1>
+      {%- endif -%}
+
+      {%- if section.settings.body != blank -%}
+        <div class="xi-hero__body xi-type-eyebrow">{{ section.settings.body }}</div>
+      {%- endif -%}
+
+      {%- if section.settings.button_label != blank -%}
+        <div class="xi-hero__actions">
+          <a
+            class="xi-btn xi-btn--primary xi-hero__cta"
+            {% if section.settings.button_link != blank %}
+              href="{{ section.settings.button_link }}"
+            {% else %}
+              href="{{ routes.all_products_collection_url }}"
+            {% endif %}
+          >
+            {{ section.settings.button_label | escape }}
+          </a>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "XI Hero",
+  "tag": "section",
+  "class": "xi-home__section-slot xi-home__section-slot--hero",
+  "enabled_on": {
+    "templates": ["index"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_desktop",
+      "label": "Desktop image",
+      "info": "Full-bleed lifestyle photography. Set the focal point in the image editor."
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile image",
+      "info": "Optional. Use a tighter crop that preserves the subject. Falls back to desktop image."
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 35
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Built for loyalty.\nDesigned to elevate."
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Supporting text",
+      "default": "<p>Premium dogwear for every adventure.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop Drop 001"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "label": "Content max width",
+      "min": 360,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "default": 720
+    },
+    {
+      "type": "header",
+      "content": "Desktop layout"
+    },
+    {
+      "type": "select",
+      "id": "align_desktop",
+      "label": "Content alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "vposition_desktop",
+      "label": "Vertical position",
+      "options": [
+        { "value": "top", "label": "Top" },
+        { "value": "center", "label": "Center" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "hero_height",
+      "label": "Hero height",
+      "options": [
+        { "value": "100svh", "label": "Full screen" },
+        { "value": "85svh", "label": "Tall" },
+        { "value": "70svh", "label": "Medium" }
+      ],
+      "default": "100svh"
+    },
+    {
+      "type": "header",
+      "content": "Mobile layout"
+    },
+    {
+      "type": "select",
+      "id": "align_mobile",
+      "label": "Content alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "vposition_mobile",
+      "label": "Vertical position",
+      "options": [
+        { "value": "top", "label": "Top" },
+        { "value": "center", "label": "Center" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "default": "bottom"
+    },
+    {
+      "type": "select",
+      "id": "hero_height_mobile",
+      "label": "Hero height",
+      "options": [
+        { "value": "100svh", "label": "Full screen" },
+        { "value": "85svh", "label": "Tall" },
+        { "value": "70svh", "label": "Medium" }
+      ],
+      "default": "85svh"
+    },
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_header_overlap",
+      "label": "Pull hero under transparent header",
+      "default": true
+    }
+  ],
+  "presets": [{ "name": "XI Hero" }]
+}
+{% endschema %}

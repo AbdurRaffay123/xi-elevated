@@ -1,0 +1,56 @@
+{%- doc -%}
+  XI product buy box — add to cart + dynamic checkout.
+
+  @param {object} product - Shopify product object
+  @param {object} section - Parent section object
+{%- enddoc -%}
+
+{% liquid
+  assign variant = product.selected_or_first_available_variant
+  assign can_add_to_cart = false
+  assign add_to_cart_text = 'products.product.unavailable' | t
+
+  if variant.available
+    assign can_add_to_cart = true
+    assign add_to_cart_text = 'products.product.add_to_cart' | t
+  elsif variant
+    assign add_to_cart_text = 'products.product.sold_out' | t
+  endif
+
+  assign product_form_id = 'XiProductForm-' | append: section.id
+  assign submit_id = 'XiProductSubmit-' | append: section.id
+%}
+
+<product-form-component
+  class="xi-product__form"
+  data-section-id="{{ section.id }}"
+  data-product-id="{{ product.id }}"
+  data-product-url="{{ product.url }}"
+  on:submit="/handleSubmit"
+  data-quantity-default="{% if variant.quantity_rule.min %}{{ variant.quantity_rule.min }}{% else %}1{% endif %}"
+>
+  <div class="visually-hidden" aria-live="assertive" role="status" aria-atomic="true" ref="liveRegion"></div>
+
+  {%- form 'product', product, id: product_form_id, class: 'xi-product__form-inner' -%}
+    <input type="hidden" name="id" ref="variantId" value="{{ variant.id }}">
+
+    <div class="xi-product__actions" ref="productFormButtons">
+      {% render 'add-to-cart-button',
+        id: submit_id,
+        class: 'xi-btn xi-btn--primary xi-btn--block xi-product__submit',
+        can_add_to_cart: can_add_to_cart,
+        product: product,
+        add_to_cart_text: add_to_cart_text,
+        icon_only_on_mobile: false
+      %}
+
+      <div
+        class="xi-product__dynamic-checkout accelerated-checkout-block"
+        ref="acceleratedCheckoutButtonContainer"
+        {% unless can_add_to_cart %}hidden{% endunless %}
+      >
+        {{ form | payment_button }}
+      </div>
+    </div>
+  {%- endform -%}
+</product-form-component>

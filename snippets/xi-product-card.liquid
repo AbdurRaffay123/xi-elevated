@@ -1,0 +1,193 @@
+{%- doc -%}
+  Branded XI Elevated product card: gray media, color swatch, color name, product type, price.
+
+  @param {object} [product] - Shopify product object
+  @param {string} [color_name] - Override color label (onboarding)
+  @param {string} [swatch_color] - Swatch token: charcoal, black, oatmeal, sage
+  @param {string} [product_type] - Override product type label (onboarding)
+  @param {number} [price_cents] - Override price in cents (onboarding)
+  @param {string} [image_sizes] - Responsive sizes attribute for the image
+  @param {string} [loading] - Image loading strategy: 'lazy' (default) or 'eager'
+  @param {boolean} [show_secondary_image] - Show second image on hover. Default: false
+  @param {string} [class] - Additional card classes
+  @param {boolean} [link_enabled] - Allow onboarding card links. Default: true
+  @param {string} [card_url] - Override URL for onboarding card links
+{%- enddoc -%}
+
+{% liquid
+  assign xi_card_loading = loading | default: 'lazy'
+  assign xi_card_sizes = image_sizes | default: '(min-width: 990px) 25vw, (min-width: 750px) 33vw, 50vw'
+  assign xi_show_secondary = show_secondary_image | default: false
+  assign xi_link_enabled = link_enabled | default: true, allow_false: true
+
+  assign xi_card_classes = 'xi-product-card'
+  if class != blank
+    assign xi_card_classes = xi_card_classes | append: ' ' | append: class
+  endif
+
+  assign xi_onboarding = false
+  if product == blank or product.id == empty
+    assign xi_onboarding = true
+  endif
+
+  if xi_onboarding
+    assign xi_color_name = color_name | default: 'Charcoal'
+    assign xi_product_type = product_type | default: 'Hoodie'
+    assign xi_price = price_cents | default: 6995
+    assign xi_swatch_key = swatch_color | default: 'charcoal'
+    if xi_link_enabled
+      assign xi_card_url = card_url | default: routes.all_products_collection_url
+    endif
+  else
+    assign xi_variant = product.selected_or_first_available_variant
+    assign xi_card_url = xi_variant.url | default: product.url
+    assign xi_price = xi_variant.price
+
+    assign xi_color_name = product.metafields.custom.color_display_name.value
+    if xi_color_name == blank
+      for option in product.options_with_values
+        assign option_name_downcase = option.name | downcase
+        if option_name_downcase == 'color' or option_name_downcase == 'colour'
+          assign xi_color_name = xi_variant.options[forloop.index0]
+          break
+        endif
+      endfor
+    endif
+    if xi_color_name == blank
+      assign xi_color_name = product.title | split: ' ' | first
+    endif
+
+    assign xi_product_type = product.metafields.custom.product_type_label.value
+    if xi_product_type == blank
+      assign xi_product_type = product.type
+    endif
+    if xi_product_type == blank
+      assign xi_product_type = product.title | split: ' ' | last
+    endif
+
+    assign xi_swatch_key = product.metafields.custom.swatch_color.value
+    if xi_swatch_key == blank
+      assign xi_swatch_key = xi_color_name | downcase | strip
+    endif
+
+    assign xi_featured_image = xi_variant.featured_image | default: product.featured_media.preview_image
+    if xi_show_secondary and product.media.size > 1
+      assign xi_secondary_image = product.media[1].preview_image
+    endif
+  endif
+
+  case xi_swatch_key
+    when 'charcoal', 'dark grey', 'dark gray', 'grey', 'gray'
+      assign xi_swatch_key = 'charcoal'
+    when 'black'
+      assign xi_swatch_key = 'black'
+    when 'oatmeal', 'cream', 'beige', 'tan'
+      assign xi_swatch_key = 'oatmeal'
+    when 'sage', 'green', 'olive'
+      assign xi_swatch_key = 'sage'
+    when 'blue', 'sky', 'cobalt'
+      assign xi_swatch_key = 'blue'
+    when 'navy', 'midnight'
+      assign xi_swatch_key = 'navy'
+    when 'sand', 'stone', 'taupe'
+      assign xi_swatch_key = 'sand'
+    when 'burgundy', 'wine', 'maroon', 'red'
+      assign xi_swatch_key = 'burgundy'
+    else
+      assign xi_swatch_key = 'charcoal'
+  endcase
+%}
+
+<article class="{{ xi_card_classes }}{% if xi_onboarding %} xi-product-card--placeholder{% endif %}">
+  {% if xi_onboarding %}
+    {% if xi_link_enabled and xi_card_url != blank %}
+      <a href="{{ xi_card_url }}" class="xi-product-card__link" aria-label="{{ xi_color_name | escape }} {{ xi_product_type | escape }}">
+    {% else %}
+      <div class="xi-product-card__link" aria-hidden="true">
+    {% endif %}
+      <div class="xi-product-card__media">
+        {%- assign xi_card_ph_id = xi_color_name | size | times: 7 | plus: 300 -%}
+        <img
+          class="xi-product-card__image xi-product-card__image--primary"
+          src="https://picsum.photos/seed/xi{{ xi_card_ph_id }}/600/600?grayscale"
+          width="600"
+          height="600"
+          alt="{{ xi_color_name | escape }} {{ xi_product_type | escape }}"
+          loading="lazy"
+          decoding="async"
+        >
+      </div>
+      <div class="xi-product-card__info">
+        <div class="xi-product-card__color-row">
+          <span class="xi-product-card__swatch" data-color="{{ xi_swatch_key }}" aria-hidden="true"></span>
+          <span class="xi-product-card__color">{{ xi_color_name | upcase }}</span>
+        </div>
+        <span class="xi-product-card__type">{{ xi_product_type | upcase }}</span>
+        <span class="xi-product-card__price">
+          {% render 'format-price', price: xi_price %}
+        </span>
+      </div>
+    {% if xi_link_enabled and xi_card_url != blank %}
+      </a>
+    {% else %}
+      </div>
+    {% endif %}
+  {% else %}
+    <a href="{{ xi_card_url }}" class="xi-product-card__link" aria-label="{{ product.title | escape }}">
+      <div class="xi-product-card__media">
+        {% if xi_featured_image != blank %}
+          {{
+            xi_featured_image
+            | image_url: width: 900
+            | image_tag:
+              widths: '300, 450, 600, 750, 900',
+              sizes: xi_card_sizes,
+              loading: xi_card_loading,
+              alt: product.title,
+              class: 'xi-product-card__image xi-product-card__image--primary',
+              decoding: 'async'
+          }}
+          {% if xi_secondary_image != blank %}
+            {{
+              xi_secondary_image
+              | image_url: width: 900
+              | image_tag:
+                widths: '300, 450, 600, 750, 900',
+                sizes: xi_card_sizes,
+                loading: 'lazy',
+                alt: '',
+                class: 'xi-product-card__image xi-product-card__image--secondary',
+                decoding: 'async'
+            }}
+          {% endif %}
+        {% else %}
+          {%- assign xi_card_ph_id = xi_color_name | size | times: 7 | plus: 300 -%}
+          <img
+            class="xi-product-card__image xi-product-card__image--primary"
+            src="https://picsum.photos/seed/xi{{ xi_card_ph_id }}/600/600?grayscale"
+            width="600"
+            height="600"
+            alt="{{ product.title | escape }}"
+            loading="lazy"
+            decoding="async"
+          >
+        {% endif %}
+      </div>
+
+      <div class="xi-product-card__info">
+        {% if xi_color_name != blank %}
+          <div class="xi-product-card__color-row">
+            <span class="xi-product-card__swatch" data-color="{{ xi_swatch_key }}" aria-hidden="true"></span>
+            <span class="xi-product-card__color">{{ xi_color_name | upcase }}</span>
+          </div>
+        {% endif %}
+        {% if xi_product_type != blank %}
+          <span class="xi-product-card__type">{{ xi_product_type | upcase }}</span>
+        {% endif %}
+        <span class="xi-product-card__price">
+          {% render 'format-price', price: xi_price %}
+        </span>
+      </div>
+    </a>
+  {% endif %}
+</article>

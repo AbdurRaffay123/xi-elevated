@@ -1,0 +1,338 @@
+{%- comment -%}
+  XI Product Details — section 4 (accordion content + lifestyle image).
+  Content sources (primary):
+  - custom.pdp_description (rich text / multi-line text)
+  - custom.pdp_features (list.metaobject_reference)
+  - custom.pdp_shipping_returns (rich text / multi-line text)
+  - custom.pdp_size_guide_content (rich text / multi-line text)
+  - custom.pdp_story_image (file_reference)
+{%- endcomment -%}
+
+{%- liquid
+  assign xi_description_mf = product.metafields.custom.pdp_description
+  assign xi_features_refs = product.metafields.custom.pdp_features.value
+  assign xi_shipping_mf = product.metafields.custom.pdp_shipping_returns
+  assign xi_size_guide_mf = product.metafields.custom.pdp_size_guide_content
+  assign xi_story_image = product.metafields.custom.pdp_story_image.value
+
+  if xi_story_image == blank and section.settings.fallback_story_image != blank
+    assign xi_story_image = section.settings.fallback_story_image
+  endif
+
+  assign xi_has_features = false
+  if xi_features_refs != blank and xi_features_refs.count > 0
+    assign xi_has_features = true
+  endif
+
+  assign xi_has_any_content = false
+  if xi_description_mf != blank or xi_has_features or xi_shipping_mf != blank or xi_size_guide_mf != blank or xi_story_image != blank
+    assign xi_has_any_content = true
+  endif
+-%}
+
+{%- if xi_has_any_content -%}
+  <section
+    class="xi-product-details"
+    data-xi-product-details="{{ section.id }}"
+    aria-labelledby="xi-product-details-heading-{{ section.id }}"
+    style="
+      --xi-product-details-pad-top: {{ section.settings.padding_top }}px;
+      --xi-product-details-pad-bottom: {{ section.settings.padding_bottom }}px;
+    "
+    {{ section.shopify_attributes }}
+  >
+    <h2 id="xi-product-details-heading-{{ section.id }}" class="xi-visually-hidden">{{ product.title | escape }} product details</h2>
+    <div class="xi-product-details__inner xi-container xi-container--wide">
+      <div class="xi-product-details__content">
+        <details class="xi-product-details__item" open>
+          <summary
+            class="xi-product-details__summary"
+            id="xi-product-details-summary-description-{{ section.id }}"
+            aria-controls="xi-product-details-panel-description-{{ section.id }}"
+          >
+            <span>{{ section.settings.description_heading | escape }}</span>
+          </summary>
+          <div
+            class="xi-product-details__panel"
+            id="xi-product-details-panel-description-{{ section.id }}"
+            role="region"
+            aria-labelledby="xi-product-details-summary-description-{{ section.id }}"
+          >
+            {%- if xi_description_mf != blank -%}
+              <div class="xi-product-details__prose">
+                {{ xi_description_mf | metafield_tag }}
+              </div>
+            {%- elsif section.settings.description_fallback != blank -%}
+              <div class="xi-product-details__prose">
+                {{ section.settings.description_fallback }}
+              </div>
+            {%- endif -%}
+          </div>
+        </details>
+
+        <details class="xi-product-details__item" open>
+          <summary
+            class="xi-product-details__summary"
+            id="xi-product-details-summary-features-{{ section.id }}"
+            aria-controls="xi-product-details-panel-features-{{ section.id }}"
+          >
+            <span>{{ section.settings.features_heading | escape }}</span>
+          </summary>
+          <div
+            class="xi-product-details__panel"
+            id="xi-product-details-panel-features-{{ section.id }}"
+            role="region"
+            aria-labelledby="xi-product-details-summary-features-{{ section.id }}"
+          >
+            {%- if xi_has_features -%}
+              <ul class="xi-product-details__feature-list" role="list">
+                {%- for feature in xi_features_refs -%}
+                  {%- liquid
+                    assign xi_feature_title = feature.title.value | default: feature.title | default: feature.heading.value | default: feature.heading | default: feature.name.value | default: feature.name
+                    assign xi_feature_copy = feature.subtitle.value | default: feature.subtitle | default: feature.description.value | default: feature.description | default: feature.copy.value | default: feature.copy
+                    assign xi_feature_icon_key = feature.icon.value | default: feature.icon | default: feature.icon_name.value | default: feature.icon_name | default: ''
+                    assign xi_feature_icon_key = xi_feature_icon_key | downcase | replace: ' ', '-' | replace: '_', '-'
+                    assign xi_feature_title_key = xi_feature_title | downcase
+
+                    case xi_feature_icon_key
+                      when 'pocket', 'hidden-pocket', 'hidden-side-pocket'
+                        assign xi_feature_icon = 'pocket'
+                      when 'fabric', 'fleece', 'heavyweight-fleece'
+                        assign xi_feature_icon = 'fabric'
+                      when 'embroidery', 'stitched', 'needle'
+                        assign xi_feature_icon = 'embroidery'
+                      when 'tag'
+                        assign xi_feature_icon = 'tag'
+                      when 'hood', 'oversized-hood'
+                        assign xi_feature_icon = 'hood'
+                      when 'hem', 'cut', 'raised-front-cut', 'movement'
+                        assign xi_feature_icon = 'hem'
+                      when 'limited', 'limited-release', 'batch', 'release'
+                        assign xi_feature_icon = 'limited'
+                      when 'truck', 'shipping'
+                        assign xi_feature_icon = 'truck'
+                      when 'lock', 'secure'
+                        assign xi_feature_icon = 'lock'
+                      when 'ruler', 'size', 'measurement'
+                        assign xi_feature_icon = 'ruler'
+                      when 'star', 'star-outline'
+                        assign xi_feature_icon = 'star-outline'
+                      when blank
+                        assign xi_feature_icon = ''
+                      else
+                        assign xi_feature_icon = xi_feature_icon_key
+                    endcase
+
+                    if xi_feature_icon == blank or xi_feature_icon == 'star-outline'
+                      if xi_feature_title_key contains 'pocket'
+                        assign xi_feature_icon = 'pocket'
+                      elsif xi_feature_title_key contains 'embroidery' or xi_feature_title_key contains 'stitch'
+                        assign xi_feature_icon = 'embroidery'
+                      elsif xi_feature_title_key contains 'fleece' or xi_feature_title_key contains 'fabric'
+                        assign xi_feature_icon = 'fabric'
+                      elsif xi_feature_title_key contains 'hood'
+                        assign xi_feature_icon = 'hood'
+                      elsif xi_feature_title_key contains 'cut' or xi_feature_title_key contains 'movement' or xi_feature_title_key contains 'hem'
+                        assign xi_feature_icon = 'hem'
+                      elsif xi_feature_title_key contains 'limited' or xi_feature_title_key contains 'batch' or xi_feature_title_key contains 'release'
+                        assign xi_feature_icon = 'limited'
+                      else
+                        assign xi_feature_icon = 'star-outline'
+                      endif
+                    endif
+                  -%}
+
+                  <li class="xi-product-details__feature-item">
+                    <span class="xi-product-details__feature-icon" aria-hidden="true">
+                      {% render 'xi-icons', icon: xi_feature_icon, size: 'lg' %}
+                    </span>
+                    <div class="xi-product-details__feature-text">
+                      {%- if xi_feature_title != blank -%}
+                        <h3 class="xi-product-details__feature-title">{{ xi_feature_title | escape }}</h3>
+                      {%- endif -%}
+                      {%- if xi_feature_copy != blank -%}
+                        <p class="xi-product-details__feature-copy">{{ xi_feature_copy | escape }}</p>
+                      {%- endif -%}
+                    </div>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- elsif section.settings.features_fallback != blank -%}
+              <div class="xi-product-details__prose">
+                {{ section.settings.features_fallback }}
+              </div>
+            {%- endif -%}
+          </div>
+        </details>
+
+        <details class="xi-product-details__item">
+          <summary
+            class="xi-product-details__summary"
+            id="xi-product-details-summary-shipping-{{ section.id }}"
+            aria-controls="xi-product-details-panel-shipping-{{ section.id }}"
+          >
+            <span>{{ section.settings.shipping_heading | escape }}</span>
+          </summary>
+          <div
+            class="xi-product-details__panel"
+            id="xi-product-details-panel-shipping-{{ section.id }}"
+            role="region"
+            aria-labelledby="xi-product-details-summary-shipping-{{ section.id }}"
+          >
+            {%- if xi_shipping_mf != blank -%}
+              <div class="xi-product-details__prose">
+                {{ xi_shipping_mf | metafield_tag }}
+              </div>
+            {%- elsif section.settings.shipping_fallback != blank -%}
+              <div class="xi-product-details__prose">
+                {{ section.settings.shipping_fallback }}
+              </div>
+            {%- endif -%}
+          </div>
+        </details>
+
+        <details class="xi-product-details__item">
+          <summary
+            class="xi-product-details__summary"
+            id="xi-product-details-summary-size-guide-{{ section.id }}"
+            aria-controls="xi-product-details-panel-size-guide-{{ section.id }}"
+          >
+            <span>{{ section.settings.size_guide_heading | escape }}</span>
+          </summary>
+          <div
+            class="xi-product-details__panel"
+            id="xi-product-details-panel-size-guide-{{ section.id }}"
+            role="region"
+            aria-labelledby="xi-product-details-summary-size-guide-{{ section.id }}"
+          >
+            {%- if xi_size_guide_mf != blank -%}
+              <div class="xi-product-details__prose">
+                {{ xi_size_guide_mf | metafield_tag }}
+              </div>
+            {%- elsif section.settings.size_guide_fallback != blank -%}
+              <div class="xi-product-details__prose">
+                {{ section.settings.size_guide_fallback }}
+              </div>
+            {%- endif -%}
+          </div>
+        </details>
+      </div>
+
+      <div class="xi-product-details__media">
+        {%- if xi_story_image != blank -%}
+          {{
+            xi_story_image
+            | image_url: width: 1200
+            | image_tag:
+              widths: '420, 560, 720, 900, 1200',
+              sizes: '(min-width: 990px) 40vw, 100vw',
+              loading: 'lazy',
+              class: 'xi-product-details__image',
+              alt: section.settings.story_image_alt | default: product.title
+          }}
+        {%- elsif section.settings.show_placeholder_image -%}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'xi-product-details__placeholder' }}
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "XI Product Details",
+  "tag": "section",
+  "class": "xi-product-details-section",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Primary content comes from product metafields and metaobjects (custom namespace)."
+    },
+    {
+      "type": "text",
+      "id": "description_heading",
+      "label": "Description heading",
+      "default": "Description"
+    },
+    {
+      "type": "richtext",
+      "id": "description_fallback",
+      "label": "Description fallback"
+    },
+    {
+      "type": "text",
+      "id": "features_heading",
+      "label": "Features heading",
+      "default": "Features"
+    },
+    {
+      "type": "richtext",
+      "id": "features_fallback",
+      "label": "Features fallback"
+    },
+    {
+      "type": "text",
+      "id": "shipping_heading",
+      "label": "Shipping heading",
+      "default": "Shipping & returns"
+    },
+    {
+      "type": "richtext",
+      "id": "shipping_fallback",
+      "label": "Shipping fallback"
+    },
+    {
+      "type": "text",
+      "id": "size_guide_heading",
+      "label": "Size guide heading",
+      "default": "Size guide"
+    },
+    {
+      "type": "richtext",
+      "id": "size_guide_fallback",
+      "label": "Size guide fallback"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_story_image",
+      "label": "Fallback story image"
+    },
+    {
+      "type": "text",
+      "id": "story_image_alt",
+      "label": "Story image alt text",
+      "default": "Lifestyle image"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_placeholder_image",
+      "label": "Show placeholder image when no metafield image",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    }
+  ],
+  "presets": [{ "name": "XI Product Details" }]
+}
+{% endschema %}

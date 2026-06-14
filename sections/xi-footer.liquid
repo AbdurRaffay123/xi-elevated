@@ -1,0 +1,375 @@
+<div
+  class="xi-footer"
+  style="
+    --xi-footer-bg: {{ section.settings.background_color }};
+    --xi-footer-text: {{ section.settings.text_color }};
+    --xi-footer-muted: {{ section.settings.muted_text_color }};
+    --xi-footer-padding-top: {{ section.settings.padding_top }}px;
+    --xi-footer-padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+  {{ section.shopify_attributes }}
+>
+  <div class="xi-footer__main xi-container xi-container--wide">
+    <div class="xi-footer__brand">
+      {% render 'xi-logo',
+        variant: 'footer',
+        color_mode: 'dark',
+        logo_image: section.settings.logo_image,
+        width: section.settings.logo_width,
+        link: section.settings.logo_link,
+        class: 'xi-footer__logo'
+      %}
+
+      {% if section.settings.mission_text != blank %}
+        <div class="xi-footer__mission">
+          {{ section.settings.mission_text }}
+        </div>
+      {% endif %}
+    </div>
+
+    {% assign shop_menu = linklists[section.settings.shop_menu] %}
+    <nav class="xi-footer__column xi-footer__column--shop" aria-label="{{ section.settings.shop_heading | escape }}">
+      <p class="xi-footer__heading">{{ section.settings.shop_heading | escape }}</p>
+      {% if shop_menu.links.size > 0 %}
+        <ul class="xi-footer__list">
+          {% for link in shop_menu.links %}
+            <li>
+              <a class="xi-footer__link" href="{{ link.url }}">{{ link.title | escape }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </nav>
+
+    {% assign info_menu = linklists[section.settings.info_menu] %}
+    <nav class="xi-footer__column xi-footer__column--info" aria-label="{{ section.settings.info_heading | escape }}">
+      <p class="xi-footer__heading">{{ section.settings.info_heading | escape }}</p>
+      <ul class="xi-footer__list">
+        {% if info_menu.links.size > 0 %}
+          {% for link in info_menu.links %}
+            <li>
+              <a class="xi-footer__link" href="{{ link.url }}">{{ link.title | escape }}</a>
+            </li>
+          {% endfor %}
+        {% else %}
+          <li><a class="xi-footer__link" href="/pages/our-story">Our Story</a></li>
+          <li><a class="xi-footer__link" href="/pages/sizing-guide">Sizing Guide</a></li>
+          {% if shop.shipping_policy %}
+            <li><a class="xi-footer__link" href="{{ shop.shipping_policy.url }}">Shipping</a></li>
+          {% else %}
+            <li><a class="xi-footer__link" href="/policies/shipping-policy">Shipping</a></li>
+          {% endif %}
+          {% if shop.refund_policy %}
+            <li><a class="xi-footer__link" href="{{ shop.refund_policy.url }}">Returns</a></li>
+          {% else %}
+            <li><a class="xi-footer__link" href="/policies/refund-policy">Returns</a></li>
+          {% endif %}
+        {% endif %}
+      </ul>
+    </nav>
+
+    {% assign support_menu = linklists[section.settings.support_menu] %}
+    <nav class="xi-footer__column xi-footer__column--support" aria-label="{{ section.settings.support_heading | escape }}">
+      <p class="xi-footer__heading">{{ section.settings.support_heading | escape }}</p>
+      <ul class="xi-footer__list">
+        {% if support_menu.links.size > 0 %}
+          {% for link in support_menu.links %}
+            <li>
+              <a class="xi-footer__link" href="{{ link.url }}">{{ link.title | escape }}</a>
+            </li>
+          {% endfor %}
+        {% else %}
+          <li><a class="xi-footer__link" href="/pages/contact">Contact</a></li>
+          <li><a class="xi-footer__link" href="/pages/faq">FAQ</a></li>
+          <li><a class="xi-footer__link" href="/pages/track-order">Track Order</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+
+    <div class="xi-footer__newsletter">
+      {% render 'xi-newsletter-form',
+        suffix: section.id,
+        heading: section.settings.newsletter_heading,
+        description: section.settings.newsletter_description,
+        placeholder: section.settings.newsletter_placeholder,
+        variant: 'footer',
+        class: 'xi-footer__newsletter-form'
+      %}
+    </div>
+  </div>
+
+  <div class="xi-footer__bar xi-container xi-container--wide">
+    <div class="xi-footer__bar-left">
+      <p class="xi-footer__copyright">
+        {% if section.settings.copyright_text != blank %}
+          {{ section.settings.copyright_text }}
+        {% else %}
+          &copy; {{ 'now' | date: '%Y' }} XI Elevated. All rights reserved.
+        {% endif %}
+      </p>
+    </div>
+
+    {% if section.settings.show_social_icons %}
+      <div class="xi-footer__bar-right">
+        <ul class="xi-footer__social" aria-label="{{ section.settings.social_label | escape }}">
+          <li>
+            {% if section.settings.instagram_url != blank %}
+              <a class="xi-footer__social-link" href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                <svg class="xi-footer__social-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">{% render 'icon', icon: 'instagram' %}</svg>
+              </a>
+            {% else %}
+              <span class="xi-footer__social-link xi-footer__social-link--static" aria-hidden="true">
+                <svg class="xi-footer__social-icon" viewBox="0 0 24 24" focusable="false">{% render 'icon', icon: 'instagram' %}</svg>
+              </span>
+            {% endif %}
+          </li>
+          <li>
+            {% if section.settings.tiktok_url != blank %}
+              <a class="xi-footer__social-link" href="{{ section.settings.tiktok_url }}" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+                <svg class="xi-footer__social-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">{% render 'icon', icon: 'tiktok' %}</svg>
+              </a>
+            {% else %}
+              <span class="xi-footer__social-link xi-footer__social-link--static" aria-hidden="true">
+                <svg class="xi-footer__social-icon" viewBox="0 0 24 24" focusable="false">{% render 'icon', icon: 'tiktok' %}</svg>
+              </span>
+            {% endif %}
+          </li>
+          <li>
+            {% if section.settings.facebook_url != blank %}
+              <a class="xi-footer__social-link" href="{{ section.settings.facebook_url }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                <svg class="xi-footer__social-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">{% render 'icon', icon: 'facebook' %}</svg>
+              </a>
+            {% else %}
+              <span class="xi-footer__social-link xi-footer__social-link--static" aria-hidden="true">
+                <svg class="xi-footer__social-icon" viewBox="0 0 24 24" focusable="false">{% render 'icon', icon: 'facebook' %}</svg>
+              </span>
+            {% endif %}
+          </li>
+        </ul>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "XI Footer",
+  "tag": "section",
+  "class": "xi-footer-section-wrapper",
+  "enabled_on": {
+    "groups": ["footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Brand"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_image",
+      "label": "Logo image",
+      "info": "Optional. Uses typography fallback when empty."
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo width",
+      "min": 80,
+      "max": 220,
+      "step": 2,
+      "unit": "px",
+      "default": 140
+    },
+    {
+      "type": "checkbox",
+      "id": "logo_link",
+      "label": "Link logo to homepage",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "mission_text",
+      "label": "Mission statement",
+      "default": "<p>Elevated dogwear.<br>Built with purpose.<br>Designed to last.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Shop menu"
+    },
+    {
+      "type": "link_list",
+      "id": "shop_menu",
+      "label": "Shop menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "text",
+      "id": "shop_heading",
+      "label": "Shop heading",
+      "default": "Shop"
+    },
+    {
+      "type": "header",
+      "content": "Info menu"
+    },
+    {
+      "type": "link_list",
+      "id": "info_menu",
+      "label": "Info menu"
+    },
+    {
+      "type": "text",
+      "id": "info_heading",
+      "label": "Info heading",
+      "default": "Info"
+    },
+    {
+      "type": "header",
+      "content": "Support menu"
+    },
+    {
+      "type": "link_list",
+      "id": "support_menu",
+      "label": "Support menu"
+    },
+    {
+      "type": "text",
+      "id": "support_heading",
+      "label": "Support heading",
+      "default": "Support"
+    },
+    {
+      "type": "header",
+      "content": "Newsletter"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_heading",
+      "label": "Newsletter heading",
+      "default": "Join the Pack"
+    },
+    {
+      "type": "textarea",
+      "id": "newsletter_description",
+      "label": "Newsletter description",
+      "default": "Get early access to new drops and exclusive offers."
+    },
+    {
+      "type": "text",
+      "id": "newsletter_placeholder",
+      "label": "Email placeholder",
+      "default": "Enter your email"
+    },
+    {
+      "type": "header",
+      "content": "Bottom bar"
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Copyright text",
+      "info": "Leave blank to use © year and shop name."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_policy_links",
+      "label": "Show policy links",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social_icons",
+      "label": "Show social icons",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "policies_label",
+      "label": "Policies navigation label",
+      "default": "Store policies"
+    },
+    {
+      "type": "text",
+      "id": "social_label",
+      "label": "Social links label",
+      "default": "Social media"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "tiktok_url",
+      "label": "TikTok URL"
+    },
+    {
+      "type": "url",
+      "id": "facebook_url",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "url",
+      "id": "pinterest_url",
+      "label": "Pinterest URL"
+    },
+    {
+      "type": "url",
+      "id": "youtube_url",
+      "label": "YouTube URL"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Muted text color",
+      "default": "#999999"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 40,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 24,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    }
+  ],
+  "presets": [
+    {
+      "name": "XI Footer"
+    }
+  ]
+}
+{% endschema %}

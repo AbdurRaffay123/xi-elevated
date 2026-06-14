@@ -1,0 +1,173 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "xi_hero": {
+      "type": "xi-hero",
+      "settings": {
+        "enable_header_overlap": true,
+        "eyebrow": "",
+        "heading": "Built for loyalty.\nDesigned to elevate.",
+        "content_max_width": 720
+      }
+    },
+    "xi_trust_bar": {
+      "type": "xi-trust-bar",
+      "blocks": {
+        "trust_shipping": {
+          "type": "item",
+          "settings": {
+            "icon": "truck",
+            "title": "Free shipping",
+            "copy": "On orders over $150"
+          }
+        },
+        "trust_secure": {
+          "type": "item",
+          "settings": {
+            "icon": "lock",
+            "title": "Secure checkout",
+            "copy": "Safe & encrypted"
+          }
+        },
+        "trust_limited": {
+          "type": "item",
+          "settings": {
+            "icon": "star-outline",
+            "title": "Limited release",
+            "copy": "Made in small batches"
+          }
+        }
+      },
+      "block_order": [
+        "trust_shipping",
+        "trust_secure",
+        "trust_limited"
+      ],
+      "settings": {
+        "padding_top": 50,
+        "padding_bottom": 50
+      }
+    },
+    "xi_featured_collection_story": {
+      "type": "xi-featured-collection-story",
+      "settings": {
+        "enable_image_overlay": true,
+        "overlay_opacity": 40,
+        "eyebrow": "Drop 001",
+        "heading": "Off Grid Club",
+        "body": "Premium dogwear\ndesigned for everyday\nadventures",
+        "button_label": "Shop now",
+        "section_height": "85svh",
+        "section_height_mobile": "70svh",
+        "content_max_width": 440
+      }
+    },
+    "xi_product_grid": {
+      "type": "xi-product-grid",
+      "settings": {
+        "heading": "The Collection",
+        "show_view_all": true,
+        "view_all_label": "View all",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "columns_tablet": 3,
+        "columns_mobile": "2",
+        "background_color": "#f2f2f2",
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    },
+    "xi_brand_story": {
+      "type": "xi-brand-story",
+      "settings": {
+        "enable_image_overlay": true,
+        "overlay_opacity": 35,
+        "heading": "For dogs that\nGo everywhere\nwith you.",
+        "subheading": "Because loyalty\ndeserves the best.",
+        "button_label": "Our story",
+        "section_height": "75svh",
+        "section_height_mobile": "70svh",
+        "content_max_width": 520
+      }
+    },
+    "xi_feature_highlights": {
+      "type": "xi-feature-highlights",
+      "blocks": {
+        "feature_pocket": {
+          "type": "item",
+          "settings": {
+            "icon": "pocket",
+            "title": "Hidden side pocket",
+            "copy": "For the essentials."
+          }
+        },
+        "feature_fabric": {
+          "type": "item",
+          "settings": {
+            "icon": "fabric",
+            "title": "Premium fabric",
+            "copy": "Heavyweight fleece built to last."
+          }
+        },
+        "feature_limited": {
+          "type": "item",
+          "settings": {
+            "icon": "tag",
+            "title": "Limited drops",
+            "copy": "Produced in small batches."
+          }
+        }
+      },
+      "block_order": [
+        "feature_pocket",
+        "feature_fabric",
+        "feature_limited"
+      ],
+      "settings": {
+        "padding_top": 50,
+        "padding_bottom": 50
+      }
+    },
+    "xi_community_gallery": {
+      "type": "xi-community-gallery",
+      "blocks": {
+        "community_1": { "type": "image", "settings": {} },
+        "community_2": { "type": "image", "settings": {} },
+        "community_3": { "type": "image", "settings": {} },
+        "community_4": { "type": "image", "settings": {} },
+        "community_5": { "type": "image", "settings": {} }
+      },
+      "block_order": [
+        "community_1",
+        "community_2",
+        "community_3",
+        "community_4",
+        "community_5"
+      ],
+      "settings": {
+        "heading": "Loved by our community",
+        "show_rating_bar": true,
+        "rating_text": "4.9 / 5 from 850+ reviews",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    }
+  },
+  "order": [
+    "xi_hero",
+    "xi_trust_bar",
+    "xi_featured_collection_story",
+    "xi_product_grid",
+    "xi_brand_story",
+    "xi_feature_highlights",
+    "xi_community_gallery"
+  ]
+}

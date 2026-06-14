@@ -1,0 +1,670 @@
+/**
+ * XI Elevated — Shared Components
+ * Reusable UI patterns built on xi-design-system.css tokens.
+ * Load after xi-design-system.css.
+ */
+
+/* ==========================================================================
+   ICONS
+   ========================================================================== */
+
+.xi-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--xi-icon-size-md);
+  height: var(--xi-icon-size-md);
+  color: currentColor;
+  --xi-icon-stroke: 1.5;
+}
+
+.xi-icon--sm {
+  width: var(--xi-icon-size-sm);
+  height: var(--xi-icon-size-sm);
+}
+
+.xi-icon--lg {
+  width: var(--xi-icon-size-lg);
+  height: var(--xi-icon-size-lg);
+}
+
+.xi-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.xi-icon svg :is(path, circle, rect, line, polyline) {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--xi-icon-stroke);
+}
+
+.xi-icon--fill svg path {
+  fill: currentColor;
+  stroke: none;
+}
+
+.xi-icon-row {
+  display: flex;
+  align-items: center;
+  gap: var(--xi-space-xs);
+}
+
+.xi-icon-row--center {
+  justify-content: center;
+}
+
+/* ==========================================================================
+   SECTION HEADER — "THE COLLECTION" + VIEW ALL
+   ========================================================================== */
+
+.xi-section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--xi-space-md);
+  margin-bottom: var(--xi-space-md);
+}
+
+.xi-section-header__title {
+  margin: 0;
+}
+
+.xi-section-header__link {
+  flex-shrink: 0;
+  font-size: var(--xi-text-eyebrow-size);
+  font-weight: 500;
+  letter-spacing: var(--xi-text-eyebrow-ls);
+  text-transform: uppercase;
+  text-decoration: none;
+  color: inherit;
+  transition: opacity var(--xi-transition-fast);
+}
+
+.xi-section-header__link:hover {
+  opacity: 0.65;
+}
+
+@media screen and (max-width: 749px) {
+  .xi-section-header {
+    align-items: center;
+  }
+}
+
+/* ==========================================================================
+   PRODUCT CARD — branded collection tile
+   ========================================================================== */
+
+.xi-product-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--xi-card-gap);
+  text-decoration: none;
+  color: var(--xi-color-text);
+}
+
+.xi-product-card__link {
+  display: flex;
+  flex-direction: column;
+  gap: var(--xi-card-gap);
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+.xi-product-card--placeholder .xi-product-card__link {
+  cursor: default;
+}
+
+.xi-product-card__media {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: var(--xi-card-image-ratio);
+  padding: 0;
+  background-color: transparent;
+  overflow: hidden;
+}
+
+.xi-product-card__media img,
+.xi-product-card__image {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+  object-position: center;
+  border: none;
+  transition: transform var(--xi-transition-slow), opacity var(--xi-transition-base);
+}
+
+.xi-product-card:hover .xi-product-card__media img {
+  transform: scale(1.015);
+  opacity: var(--xi-card-hover-opacity);
+}
+
+.xi-product-card__info {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.375rem;
+  row-gap: 0.2rem;
+  width: 100%;
+  padding-top: 0.125rem;
+  align-items: center;
+}
+
+.xi-product-card__color-row {
+  display: contents;
+}
+
+.xi-product-card__type,
+.xi-product-card__price {
+  grid-column: 2;
+}
+
+/* No color row — type and price align flush left */
+.xi-product-card__info:not(:has(.xi-product-card__color-row)) .xi-product-card__type,
+.xi-product-card__info:not(:has(.xi-product-card__color-row)) .xi-product-card__price {
+  grid-column: 1 / -1;
+}
+
+.xi-product-card__swatch {
+  flex-shrink: 0;
+  width: 0.625rem;
+  height: 0.625rem;
+  margin-left: 1px;
+  margin-right: 3px;
+  border-radius: 0;
+  background-color: var(--xi-color-charcoal);
+}
+
+.xi-product-card__swatch[data-color='charcoal'] {
+  background-color: var(--xi-color-charcoal);
+}
+
+.xi-product-card__swatch[data-color='black'] {
+  background-color: var(--xi-color-product-black);
+}
+
+.xi-product-card__swatch[data-color='oatmeal'] {
+  background-color: var(--xi-color-oatmeal);
+}
+
+.xi-product-card__swatch[data-color='sage'] {
+  background-color: var(--xi-color-sage);
+}
+
+.xi-product-card__swatch[data-color='blue'] {
+  background-color: var(--xi-color-blue);
+}
+
+.xi-product-card__swatch[data-color='navy'] {
+  background-color: var(--xi-color-navy);
+}
+
+.xi-product-card__swatch[data-color='sand'] {
+  background-color: var(--xi-color-sand);
+}
+
+.xi-product-card__swatch[data-color='burgundy'] {
+  background-color: var(--xi-color-burgundy);
+}
+
+.xi-product-card__color {
+  font-size: var(--xi-text-eyebrow-size);
+  font-weight: 700;
+  letter-spacing: var(--xi-text-eyebrow-ls);
+  text-transform: uppercase;
+  color: var(--xi-color-text);
+}
+
+.xi-product-card__type {
+  font-size: var(--xi-text-eyebrow-size);
+  font-weight: 500;
+  letter-spacing: var(--xi-text-eyebrow-ls);
+  text-transform: uppercase;
+  color: var(--xi-color-text);
+}
+
+.xi-product-card__price {
+  font-size: var(--xi-text-eyebrow-size);
+  font-weight: 500;
+  letter-spacing: var(--xi-text-eyebrow-ls);
+  margin-top: 0;
+  color: var(--xi-color-text);
+}
+
+.xi-product-card__image--secondary {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  transition: opacity var(--xi-transition-base);
+}
+
+.xi-product-card__media:has(.xi-product-card__image--secondary) .xi-product-card__image--primary {
+  transition: opacity var(--xi-transition-base);
+}
+
+.xi-product-card:hover .xi-product-card__image--secondary {
+  opacity: 1;
+}
+
+.xi-product-card:hover .xi-product-card__media:has(.xi-product-card__image--secondary) .xi-product-card__image--primary {
+  opacity: 0;
+}
+
+.xi-product-card__placeholder {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0.35;
+}
+
+/* ==========================================================================
+   TRUST BAR — homepage + PDP reassurance strip
+   ========================================================================== */
+
+.xi-trust-bar {
+  background-color: var(--xi-color-surface-alt);
+}
+
+.xi-trust-bar__inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--xi-space-md);
+  padding-block: var(--xi-space-lg);
+}
+
+@media screen and (min-width: 750px) {
+  .xi-trust-bar__inner {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--xi-space-lg);
+    padding-block: var(--xi-space-xl);
+  }
+}
+
+.xi-trust-bar__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--xi-space-xs);
+}
+
+.xi-trust-bar__icon {
+  color: var(--xi-color-text);
+  margin-bottom: var(--xi-space-xs);
+}
+
+.xi-trust-bar__title {
+  margin: 0;
+  font-size: var(--xi-text-eyebrow-size);
+  font-weight: 700;
+  letter-spacing: var(--xi-text-eyebrow-ls);
+  text-transform: uppercase;
+}
+
+.xi-trust-bar__text {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--xi-color-text-muted);
+  line-height: 1.5;
+}
+
+/* Compact variant — below PDP buy buttons */
+.xi-trust-bar--compact .xi-trust-bar__inner {
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--xi-space-sm);
+  padding-block: var(--xi-space-md);
+}
+
+.xi-trust-bar--compact .xi-trust-bar__item {
+  flex-direction: row;
+  text-align: left;
+  gap: var(--xi-space-xs);
+}
+
+.xi-trust-bar--compact .xi-trust-bar__icon {
+  margin-bottom: 0;
+}
+
+.xi-trust-bar--compact .xi-trust-bar__title {
+  font-size: 0.6875rem;
+}
+
+/* ==========================================================================
+   BREADCRUMBS
+   ========================================================================== */
+
+.xi-breadcrumbs {
+  padding-block: var(--xi-space-sm);
+}
+
+.xi-breadcrumbs__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.xi-breadcrumbs__item {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--xi-text-breadcrumb-size);
+  font-weight: 400;
+  letter-spacing: var(--xi-text-breadcrumb-ls);
+  text-transform: uppercase;
+  color: var(--xi-color-text-muted);
+}
+
+.xi-breadcrumbs__item:not(:last-child)::after {
+  content: '/';
+  margin-inline: 0.5rem;
+  color: var(--xi-color-text-muted);
+}
+
+.xi-breadcrumbs__link {
+  color: var(--xi-color-text-muted);
+  text-decoration: none;
+  transition: color var(--xi-transition-fast);
+}
+
+.xi-breadcrumbs__link:hover {
+  color: var(--xi-color-text);
+}
+
+.xi-breadcrumbs__current {
+  color: var(--xi-color-text);
+}
+
+.xi-breadcrumbs__item,
+.xi-breadcrumbs__link,
+.xi-breadcrumbs__current {
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   NEWSLETTER FORM — "JOIN THE PACK"
+   ========================================================================== */
+
+.xi-newsletter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--xi-space-sm);
+}
+
+.xi-newsletter__heading {
+  margin: 0;
+}
+
+.xi-newsletter__description {
+  margin: 0;
+  font-size: var(--xi-text-body-size);
+  line-height: var(--xi-text-body-lh);
+  color: var(--xi-color-text-inverse-muted);
+}
+
+.xi-newsletter__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: var(--xi-space-xs);
+}
+
+.xi-newsletter__field {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  width: 100%;
+}
+
+.xi-newsletter__input {
+  flex: 1;
+  min-width: 0;
+  height: var(--xi-input-height);
+  padding: 0 var(--xi-space-sm);
+  font-family: var(--xi-font-sans);
+  font-size: var(--xi-text-body-size);
+  color: var(--xi-color-text-inverse);
+  background-color: transparent;
+  border: var(--xi-border-width) solid rgba(255, 255, 255, 0.35);
+  border-right: none;
+}
+
+.xi-newsletter__input::placeholder {
+  color: var(--xi-color-text-inverse-muted);
+}
+
+.xi-newsletter__input:focus {
+  outline: none;
+  border-color: var(--xi-color-white);
+}
+
+.xi-newsletter__submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--xi-input-height);
+  height: var(--xi-input-height);
+  padding: 0;
+  color: var(--xi-color-text-inverse);
+  background-color: transparent;
+  border: var(--xi-border-width) solid rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition: background-color var(--xi-transition-fast), border-color var(--xi-transition-fast);
+}
+
+.xi-newsletter__submit:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: var(--xi-color-white);
+}
+
+.xi-newsletter__submit:focus-visible {
+  outline: none;
+  box-shadow: var(--xi-focus-ring);
+}
+
+.xi-newsletter__message {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--xi-space-xs);
+  margin-top: var(--xi-space-sm);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.xi-newsletter__message--error {
+  color: #ffb4b4;
+}
+
+.xi-newsletter__message--success {
+  color: var(--xi-color-text-inverse-muted);
+}
+
+/* ==========================================================================
+   LOGO — stacked wordmark foundation
+   ========================================================================== */
+
+.xi-logo {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  line-height: 1;
+}
+
+.xi-logo__mark {
+  font-family: var(--xi-font-logo-serif);
+  font-size: 1.75rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.xi-logo__name {
+  font-family: var(--xi-font-sans);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  margin-top: 0.25rem;
+}
+
+.xi-logo--footer .xi-logo__mark {
+  font-size: 3.375rem;
+}
+
+.xi-logo--footer .xi-logo__name {
+  font-size: 0.75rem;
+}
+
+.xi-logo--footer {
+  align-items: center;
+}
+
+.xi-logo--inverse {
+  color: var(--xi-color-text-inverse);
+}
+
+.xi-logo__image {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+}
+
+/* ==========================================================================
+   BUTTON GROUP — stacked PDP CTAs
+   ========================================================================== */
+
+.xi-btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--xi-space-sm);
+  width: 100%;
+}
+
+/* ==========================================================================
+   FEATURE HIGHLIGHT — icon + title + description column
+   ========================================================================== */
+
+.xi-feature-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--xi-space-sm);
+}
+
+.xi-feature-item__icon {
+  color: var(--xi-color-text);
+}
+
+.xi-feature-item__title {
+  margin: 0;
+  font-size: var(--xi-text-eyebrow-size);
+  font-weight: 700;
+  letter-spacing: var(--xi-text-eyebrow-ls);
+  text-transform: uppercase;
+}
+
+.xi-feature-item__text {
+  margin: 0;
+  font-size: var(--xi-text-body-size);
+  line-height: var(--xi-text-body-lh);
+  color: var(--xi-color-text-muted);
+  max-width: 20rem;
+}
+
+/* ==========================================================================
+   COMMUNITY GALLERY — UGC grid foundation
+   ========================================================================== */
+
+.xi-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--xi-space-xs);
+}
+
+@media screen and (min-width: 750px) {
+  .xi-gallery-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--xi-space-sm);
+  }
+}
+
+.xi-gallery-grid__item {
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background-color: var(--xi-color-product-gray);
+}
+
+.xi-gallery-grid__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--xi-transition-slow);
+}
+
+.xi-gallery-grid__item:hover img {
+  transform: scale(1.04);
+}
+
+.xi-rating {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--xi-space-xs);
+  margin-top: var(--xi-space-md);
+  font-size: var(--xi-text-eyebrow-size);
+  font-weight: 500;
+  letter-spacing: var(--xi-text-eyebrow-ls);
+  text-transform: uppercase;
+}
+
+.xi-rating__stars {
+  display: inline-flex;
+  gap: 0.125rem;
+  color: var(--xi-color-black);
+}
+
+/* ==========================================================================
+   ANNOUNCEMENT BAR — foundation styles
+   ========================================================================== */
+
+.xi-announcement {
+  background-color: var(--xi-color-black);
+  color: var(--xi-color-text-inverse);
+  text-align: center;
+}
+
+.xi-announcement__text {
+  margin: 0;
+  padding-block: 0.875rem;
+  font-size: var(--xi-text-announcement-size);
+  font-weight: 500;
+  letter-spacing: var(--xi-text-announcement-ls);
+  text-transform: uppercase;
+}
+
+.xi-announcement__link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.xi-announcement__link:hover {
+  text-decoration: underline;
+}

@@ -1,0 +1,54 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "header",
+  "name": "Header",
+  "sections": {
+    "xi_announcement_bar": {
+      "type": "xi-announcement-bar",
+      "settings": {
+        "enable": true,
+        "text": "Free shipping on orders over $150",
+        "link": "",
+        "background_color": "#000000",
+        "text_color": "#ffffff"
+      }
+    },
+    "xi_header": {
+      "type": "xi-header",
+      "settings": {
+        "logo_image": "",
+        "logo_width": 120,
+        "enable_sticky_header": true,
+        "enable_transparent_header_home": true,
+        "enable_transparent_header_collection": false,
+        "enable_transparent_header_product": false,
+        "scroll_offset": 24,
+        "scrolled_background_color": "#ffffff",
+        "transparent_icon_color": "#ffffff",
+        "scrolled_icon_color": "#000000",
+        "drawer_label": "Site navigation",
+        "menu_open_label": "Open menu",
+        "menu_close_label": "Close menu",
+        "shop_menu": "main-menu",
+        "drawer_width": 360,
+        "drawer_animation_duration": 400,
+        "show_search": true,
+        "show_account": true,
+        "show_cart": true,
+        "customer_account_menu": ""
+      }
+    }
+  },
+  "order": [
+    "xi_announcement_bar",
+    "xi_header"
+  ]
+}
