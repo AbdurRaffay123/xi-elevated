@@ -54,6 +54,10 @@
     {%- endif -%}
 
     {%- if template.name == 'index' -%}
+      {%- liquid
+        assign xi_search_query_placeholder = '{' | append: 'search_term_string' | append: '}'
+        assign xi_search_target = shop.url | append: '/search?q=' | append: xi_search_query_placeholder
+      -%}
       <script type="application/ld+json">
         {
           "@context": "https://schema.org",
@@ -62,7 +66,7 @@
           "url": {{ shop.url | json }},
           "potentialAction": {
             "@type": "SearchAction",
-            "target": {{ shop.url | append: '/search?q={search_term_string}' | json }},
+            "target": {{ xi_search_target | json }},
             "query-input": "required name=search_term_string"
           }
         }
